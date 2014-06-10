@@ -1,8 +1,4 @@
 <resources>
-
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="@style/Theme.Sherlock">
-        <!-- Customize your theme here. -->
-    </style>
-
+    <style name="AppTheme" parent="@style/Theme.Sherlock" />
+    <style name="dialog_theme" parent="@android:style/Theme.Dialog" />
 </resources>
