@@ -32,11 +32,13 @@ import com.actionbarsherlock.app.SherlockFragment;
 import java.util.Locale;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
-    public static final int IMU_FRAGMENT = 0;
+    /*public static final int IMU_FRAGMENT = 0;
     public static final int JOYSTICK_FRAGMENT = 1;
     public static final int GRAPH_FRAGMENT = 2;
     public static final int PID_FRAGMENT = 3;
-    public static final int INFO_FRAGMENT = 4;
+    public static final int INFO_FRAGMENT = 4;*/
+
+    public static final int PID_FRAGMENT = 1;
 
     Context context;
 
@@ -47,9 +49,6 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public SherlockFragment getItem(int position) {
-        // getItem is called to instantiate the fragment for the given page.
-        // Return a PlaceholderFragment (defined as a static inner class below).
-        return PlaceholderFragment.newInstance(position + 1);
         /*
         switch (position) {
             case 0:
@@ -66,6 +65,14 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
                 return null;
         }
         */
+        switch (position) {
+            case 1:
+                return new PIDFragment();
+            default:
+                // getItem is called to instantiate the fragment for the given page.
+                // Return a PlaceholderFragment (defined as a static inner class below).
+                return PlaceholderFragment.newInstance(position + 1);
+        }
     }
 
     @Override
@@ -82,7 +89,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return context.getString(R.string.title_section1).toUpperCase(l);
             case 1:
-                return context.getString(R.string.title_section2).toUpperCase(l);
+                return "PID";
             case 2:
                 return context.getString(R.string.title_section3).toUpperCase(l);
         }

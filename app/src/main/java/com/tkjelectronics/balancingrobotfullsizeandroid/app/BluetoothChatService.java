@@ -61,12 +61,16 @@ public class BluetoothChatService {
     private static final int MAX_RETRIES = 100; // I know this might seem way too high! But it seems to work pretty well
     public int nRetries = 0;
 
+    // Member object for the Bluetooth protocol
+    public BluetoothProtocol mBluetoothProtocol;
+
     /**
      * Constructor. Prepares a new BluetoothChat session.
      *
      * @param handler A Handler to send messages back to the UI Activity
      */
     public BluetoothChatService(Handler handler, BluetoothAdapter mBluetoothAdapter) {
+        mBluetoothProtocol = new BluetoothProtocol(this, handler);
         mAdapter = mBluetoothAdapter;
         mState = STATE_NONE;
         mHandler = handler;
@@ -154,8 +158,7 @@ public class BluetoothChatService {
      * @param socket The BluetoothSocket on which the connection was made
      * @param device The BluetoothDevice that has been connected
      */
-    public synchronized void connected(BluetoothSocket socket,
-                                       BluetoothDevice device, final String socketType) {
+    public synchronized void connected(BluetoothSocket socket, BluetoothDevice device, final String socketType) {
         if (D)
             Log.d(TAG, "connected, Socket Type: " + socketType);
 
@@ -222,6 +225,10 @@ public class BluetoothChatService {
         }
         // Perform the write unsynchronized
         r.write(out);
+    }
+
+    public void write(byte out) {
+        write(new byte[]{ out });
     }
 
     public void write(String string) {
@@ -292,8 +299,7 @@ public class BluetoothChatService {
             BluetoothSocket tmp = null;
             mSocketType = secure ? "Secure" : "Insecure";
 
-            // Get a BluetoothSocket for a connection with the
-            // given BluetoothDevice
+            // Get a BluetoothSocket for a connection with the given BluetoothDevice
             try {
                 if (secure)
                     tmp = mmDevice.createRfcommSocketToServiceRecord(UUID_RFCOMM_GENERIC);
@@ -317,8 +323,7 @@ public class BluetoothChatService {
 
             // Make a connection to the BluetoothSocket
             try {
-                // This is a blocking call and will only return on a
-                // successful connection or an exception
+                // This is a blocking call and will only return on a successful connection or an exception
                 mmSocket.connect();
             } catch (IOException e) {
                 // Close the socket
@@ -354,10 +359,7 @@ public class BluetoothChatService {
         }
     }
 
-    /**
-     * This thread runs during a connection with a remote device. It handles all
-     * incoming and outgoing transmissions.
-     */
+    /** This thread runs during a connection with a remote device. It handles all  incoming and outgoing transmissions. */
     private class ConnectedThread extends Thread {
         private final BluetoothSocket mmSocket;
         private final InputStream mmInStream;
@@ -388,22 +390,59 @@ public class BluetoothChatService {
             if (D)
                 Log.i(TAG, "BEGIN mConnectedThread");
             byte[] buffer = new byte[1024];
-            int bytes;
+            int offset = 0;
 
             // Keep listening to the InputStream while connected
             while (!stopReading) {
                 try {
+                    // TODO: Clean this up
                     if (mmInStream.available() > 0) { // Check if new data is available
-                        bytes = mmInStream.read(buffer); // Read from the InputStream
+                        int bytes = 0;
+                        while (!(new String(buffer).contains("\r\n")))
+                            bytes += mmInStream.read(buffer, offset + bytes, buffer.length - offset - bytes); // Read from the InputStream
 
-                        String readMessage = new String(buffer, 0, bytes);
-                        String[] splitMessage = readMessage.split(",");
+                        offset = 0; // Set offset for next time to 0 by default
+
+                        String string = new String(buffer, 0, bytes);
+
+                        //int count = string.length() - string.replace(BluetoothProtocol.responseHeader, "").length(); // http://stackoverflow.com/a/8910767/2175837
 
                         if (D) {
-                            Log.i(TAG, "Received string: " + readMessage);
-                            for (int i = 0; i < splitMessage.length; i++)
-                                Log.i(TAG, "splitMessage[" + i + "]: " + splitMessage[i]);
+                            Log.d(TAG, "Received " + bytes + " bytes");
+                            Log.d(TAG, "Received string (raw): " + string);
+                            //Log.d(TAG, "Count: " + count);
                         }
+
+                        //if (count > 0) {
+                            int end = 0;
+                            //for (int i = 0; i < 4; i++) {
+                            while (true) {
+                                int start = string.indexOf(BluetoothProtocol.responseHeader, end);
+                                end = string.indexOf("\r\n", start);
+                                if (start == -1) { // In case there is no response header at all assume that the message is corrupt and therefore discard the buffer
+                                    for (int i = 0; i < buffer.length; i++)
+                                        buffer[i] = 0; // Reset values
+                                    break;
+                                } else if (end == -1) {
+                                    offset = bytes - start; // Append to buffer next time
+                                    System.arraycopy(buffer, start, buffer, 0, offset);
+                                    for (int i = offset; i < buffer.length; i++)
+                                        buffer[i] = 0; // Reset values
+                                    if (D) {
+                                        Log.d(TAG, "Start: " + start + " Offset: " + offset);
+                                        for (int i = 0; i < offset; i++)
+                                            Log.d(TAG, "Buffer[" + i + "]: " + buffer[i]);
+                                    }
+                                    break;
+                                } else
+                                    mBluetoothProtocol.parseData(buffer, start, end - start);
+                            }
+                        /*
+                        } else {
+                        }*/
+
+
+
 /*
                         for (int i = 0; i < splitMessage.length; i++)
                             splitMessage[i] = splitMessage[i].trim(); // Trim message

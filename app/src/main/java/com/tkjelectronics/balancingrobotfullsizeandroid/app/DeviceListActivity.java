@@ -69,7 +69,7 @@ public class DeviceListActivity extends Activity {
 
         BalancingRobotFullSizeActivity.stopRetrying = true; // Stop retrying connecting to another device
 
-        // Set result CANCELED incase the user backs out
+        // Set result CANCELED in case the user backs out
         setResult(Activity.RESULT_CANCELED);
 
         // Initialize the button to perform device discovery

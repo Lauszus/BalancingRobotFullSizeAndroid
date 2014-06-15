@@ -20,6 +20,14 @@
     <string name="title_other_devices">Other Available Devices</string>
     <string name="button_scan">Scan for devices</string>
 
+    <!-- PID Fragment -->
+    <string name="Kp">P:</string>
+    <string name="Ki">I:</string>
+    <string name="Kd">D:</string>
+    <string name="targetAngle">Target Angle:</string>
+    <string name="currentValues">Current Values:</string>
+    <string name="adjustValues">Adjust Values:</string>
+    <string name="updateValues">Press to update PID values</string>
 
     <!-- TOOD: Removee these -->
     <string name="title_section1">Section 1</string>

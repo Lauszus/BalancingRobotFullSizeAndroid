@@ -1,3 +1,22 @@
+/*************************************************************************************
+ * Copyright (C) 2012-2014 Kristian Lauszus, TKJ Electronics. All rights reserved.
+ *
+ * This software may be distributed and modified under the terms of the GNU
+ * General Public License version 2 (GPL2) as published by the Free Software
+ * Foundation and appearing in the file GPL2.TXT included in the packaging of
+ * this file. Please note that GPL2 Section 2[b] requires that all works based
+ * on this software must also be made publicly available under the terms of
+ * the GPL2 ("Copyleft").
+ *
+ * Contact information
+ * -------------------
+ *
+ * Kristian Lauszus, TKJ Electronics
+ * Web      :  http://www.tkjelectronics.com
+ * e-mail   :  kristianl@tkjelectronics.com
+ *
+ ************************************************************************************/
+
 package com.tkjelectronics.balancingrobotfullsizeandroid.app;
 
 import android.annotation.TargetApi;
@@ -17,6 +36,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -40,6 +60,12 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
     public static final String DEVICE_NAME = "device_name";
     public static final String TOAST = "toast";
 
+    public static final String KP_VALUE = "kp_value";
+    public static final String KI_VALUE = "ki_value";
+    public static final String KD_VALUE = "kd_value";
+    public static final String TARGET_ANGLE = "target_angle";
+    public static final String TURNING_SCALE = "target_angle";
+
     // Intent request codes
     private static final int REQUEST_CONNECT_DEVICE = 1;
     private static final int REQUEST_ENABLE_BT = 2;
@@ -48,16 +74,19 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
     private BluetoothAdapter mBluetoothAdapter = null;
     private final BluetoothHandler mBluetoothHandler = new BluetoothHandler(this);
     // Member object for the chat services
-    public static BluetoothChatService mChatService = null;
+    public BluetoothChatService mChatService = null;
 
     BluetoothDevice btDevice; // The BluetoothDevice object
     boolean btSecure; // If it's a new device we will pair with the device
     public static boolean stopRetrying;
 
-    private static Toast mToast;
+    private Toast mToast;
 
     /** The {@link UnderlinePageIndicator} that will host the section contents. */
     UnderlinePageIndicator mUnderlinePageIndicator;
+
+    ViewPagerAdapter mViewPagerAdapter;
+    CustomViewPager mViewPager;
 
     @Override
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -83,10 +112,10 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
         }
 
         // Create the adapter that will return a fragment for each of the primary sections of the app.
-        ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter(getApplicationContext(), getSupportFragmentManager());
+        mViewPagerAdapter = new ViewPagerAdapter(getApplicationContext(), getSupportFragmentManager());
 
         // Set up the ViewPager with the adapter.
-        CustomViewPager mViewPager = (CustomViewPager) findViewById(R.id.pager);
+        mViewPager = (CustomViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mViewPagerAdapter);
 
         // Bind the underline indicator to the adapter
@@ -260,9 +289,14 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
         }
     }
 
+    public SherlockFragment getFragment(int item) {
+        return (SherlockFragment)mViewPagerAdapter.instantiateItem(mViewPager, item);
+    }
+
     // The Handler class that gets information back from the BluetoothChatService
     private static class BluetoothHandler extends Handler {
         private final WeakReference<BalancingRobotFullSizeActivity> mActivity; // See: http://www.androiddesignpatterns.com/2013/01/inner-class-handler-memory-leak.html
+        PIDFragment pidFragment;
         private String mConnectedDeviceName; // Name of the connected device
 
         BluetoothHandler(BalancingRobotFullSizeActivity activity) {
@@ -272,6 +306,8 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
         @Override
         public void handleMessage(Message msg) {
             BalancingRobotFullSizeActivity mBalancingRobotFullSizeActivity = mActivity.get();
+            if (mBalancingRobotFullSizeActivity == null)
+                return;
             switch (msg.what) {
                 case MESSAGE_STATE_CHANGE:
                     mBalancingRobotFullSizeActivity.supportInvalidateOptionsMenu();
@@ -280,10 +316,22 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
                     switch (msg.arg1) {
                         case BluetoothChatService.STATE_CONNECTED:
                             mBalancingRobotFullSizeActivity.showToast(mBalancingRobotFullSizeActivity.getString(R.string.connected_to) + " " + mConnectedDeviceName, Toast.LENGTH_SHORT);
-                            if (mChatService == null)
+                            if (mBalancingRobotFullSizeActivity.mChatService == null)
                                 return;
-                            /*Handler mHandler = new Handler();
+                            Handler mHandler = new Handler();
                             mHandler.postDelayed(new Runnable() {
+                                public void run() {
+                                    BalancingRobotFullSizeActivity mBalancingRobotFullSizeActivity = mActivity.get();
+                                    if (mBalancingRobotFullSizeActivity != null) {
+                                        mBalancingRobotFullSizeActivity.mChatService.mBluetoothProtocol.getPID();
+                                        mBalancingRobotFullSizeActivity.mChatService.mBluetoothProtocol.getTarget();
+                                        mBalancingRobotFullSizeActivity.mChatService.mBluetoothProtocol.getTurning();
+                                        mBalancingRobotFullSizeActivity.mChatService.mBluetoothProtocol.getKalman();
+                                    }
+                                }
+                            }, 1000); // Wait 1 second before sending the message
+
+                            /*mHandler.postDelayed(new Runnable() {
                                 public void run() {
                                     mChatService.write(getPIDValues + getEncoderValues + getSettings + getInfo + getKalman);
                                 }
@@ -314,19 +362,23 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
                         case BluetoothChatService.STATE_CONNECTING:
                             break;
                     }
-                    /*PIDFragment pidFragment = (PIDFragment) getFragment(ViewPagerAdapter.PID_FRAGMENT);
+                    pidFragment = (PIDFragment) mBalancingRobotFullSizeActivity.getFragment(ViewPagerAdapter.PID_FRAGMENT);
                     if (pidFragment != null)
                         pidFragment.updateButton();
-                    */
                     break;
 
                 case MESSAGE_READ:
-                    /*
-                    if (newPIDValues || newEncoderValues) {
-                        newPIDValues = false;
-                        newEncoderValues = false;
-                        PIDFragment.updateView();
+                    Bundle data = msg.getData();
+                    if (data != null) {
+                        pidFragment = (PIDFragment) mBalancingRobotFullSizeActivity.getFragment(ViewPagerAdapter.PID_FRAGMENT);
+                        if (pidFragment == null)
+                            return;
+                        if (data.containsKey(KP_VALUE) && data.containsKey(KI_VALUE) && data.containsKey(KD_VALUE))
+                            pidFragment.updatePID(data.getString(KP_VALUE), data.getString(KI_VALUE), data.getString(KD_VALUE));
+                        else if (data.containsKey(TARGET_ANGLE))
+                            pidFragment.updateAngle(data.getString(TARGET_ANGLE));
                     }
+                    /*
                     if (newInfo || newStatus) {
                         newInfo = false;
                         newStatus = false;
@@ -353,7 +405,9 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
                     break;
                 case MESSAGE_DISCONNECTED:
                     mBalancingRobotFullSizeActivity.supportInvalidateOptionsMenu();
-                    //PIDFragment.updateButton();
+                    pidFragment = (PIDFragment) mBalancingRobotFullSizeActivity.getFragment(ViewPagerAdapter.PID_FRAGMENT);
+                    if (pidFragment != null)
+                        pidFragment.updateButton();
                     if (msg.getData() != null)
                         mBalancingRobotFullSizeActivity.showToast(msg.getData().getString(TOAST), Toast.LENGTH_SHORT);
                     break;
