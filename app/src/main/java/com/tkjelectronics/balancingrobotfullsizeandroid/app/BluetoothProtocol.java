@@ -42,6 +42,8 @@ public class BluetoothProtocol {
 
     static final String commandHeader = "$S>"; // Standard command header
     static final String responseHeader = "$S<"; // Standard response header
+    static final String responseEnd = "\r\n";
+
 
     BluetoothChatService mChatService;
     private final Handler mHandler;

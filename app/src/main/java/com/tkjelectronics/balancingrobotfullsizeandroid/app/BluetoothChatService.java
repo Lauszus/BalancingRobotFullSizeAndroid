@@ -397,53 +397,43 @@ public class BluetoothChatService {
                 try {
                     // TODO: Clean this up
                     if (mmInStream.available() > 0) { // Check if new data is available
-                        int bytes = 0;
-                        while (!(new String(buffer).contains("\r\n")))
-                            bytes += mmInStream.read(buffer, offset + bytes, buffer.length - offset - bytes); // Read from the InputStream
-
-                        offset = 0; // Set offset for next time to 0 by default
+                        int bytes = offset;
+                        while (!(new String(buffer).contains(BluetoothProtocol.responseEnd)))
+                            bytes += mmInStream.read(buffer, bytes, buffer.length - bytes); // Read from the InputStream
 
                         String string = new String(buffer, 0, bytes);
 
-                        //int count = string.length() - string.replace(BluetoothProtocol.responseHeader, "").length(); // http://stackoverflow.com/a/8910767/2175837
-
                         if (D) {
+                            Log.d(TAG, "++ New message ++");
                             Log.d(TAG, "Received " + bytes + " bytes");
                             Log.d(TAG, "Received string (raw): " + string);
-                            //Log.d(TAG, "Count: " + count);
                         }
 
-                        //if (count > 0) {
-                            int end = 0;
-                            //for (int i = 0; i < 4; i++) {
-                            while (true) {
-                                int start = string.indexOf(BluetoothProtocol.responseHeader, end);
-                                end = string.indexOf("\r\n", start);
-                                if (D)
-                                    Log.d(TAG, "Start: " + start + " End: " + end);
-                                if (start == -1) { // In case there is no response header at all assume that the message is corrupt and therefore discard the buffer
-                                    for (int i = 0; i < buffer.length; i++)
-                                        buffer[i] = 0; // Reset values
-                                    break;
-                                } else if (end == -1) {
-                                    offset = bytes - start; // Append to buffer next time
-                                    System.arraycopy(buffer, start, buffer, 0, offset);
-                                    for (int i = offset; i < buffer.length; i++)
-                                        buffer[i] = 0; // Reset values
-                                    if (D) {
-                                        Log.d(TAG, "Start: " + start + " Offset: " + offset);
-                                        for (int i = 0; i < offset; i++)
-                                            Log.d(TAG, "Buffer[" + i + "]: " + buffer[i]);
-                                    }
-                                    break;
-                                } else
-                                    mBluetoothProtocol.parseData(buffer, start, end - start);
-                            }
-                        /*
-                        } else {
-                        }*/
-
-
+                        int end = -BluetoothProtocol.responseEnd.length(); // Set this to minus the length, so we start at 0
+                        while (true) {
+                            int start = string.indexOf(BluetoothProtocol.responseHeader, end + BluetoothProtocol.responseEnd.length());
+                            end = string.indexOf(BluetoothProtocol.responseEnd, start);
+                            if (D)
+                                Log.d(TAG, "Start: " + start + " End: " + end);
+                            if (start == -1) { // In case there is no response header at all assume that the message is finished and reset the buffer
+                                for (int i = 0; i < buffer.length; i++)
+                                    buffer[i] = 0; // Reset values
+                                offset = 0; // Reset offset
+                                break;
+                            } else if (end == -1) {
+                                offset = bytes - start; // Append to buffer next time
+                                System.arraycopy(buffer, start, buffer, 0, offset);
+                                for (int i = offset; i < buffer.length; i++)
+                                    buffer[i] = 0; // Reset the rest of the values
+                                if (D) {
+                                    Log.d(TAG, "Start: " + start + " Offset: " + offset);
+                                    for (int i = 0; i < offset; i++)
+                                        Log.d(TAG, "Buffer[" + i + "]: " + buffer[i]);
+                                }
+                                break;
+                            } else
+                                mBluetoothProtocol.parseData(buffer, start, end - start);
+                        }
 
 /*
                         for (int i = 0; i < splitMessage.length; i++)
