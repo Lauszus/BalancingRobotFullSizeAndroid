@@ -221,7 +221,7 @@ public class GraphFragment extends SherlockFragment {
             buffer[2][100] = Double.parseDouble(kalmanValue);
         } catch (NumberFormatException e) {
             if (D)
-                Log.e(TAG, "error in input", e);
+                Log.e(TAG, "Error in input", e);
             return;
         }
 

@@ -101,8 +101,8 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
 
     public int currentTabSelected;
 
+    ViewPager mViewPager;
     ViewPagerAdapter mViewPagerAdapter;
-    CustomViewPager mViewPager;
 
     @Override
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -128,10 +128,10 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
         }
 
         // Create the adapter that will return a fragment for each of the primary sections of the app.
-        mViewPagerAdapter = new ViewPagerAdapter(getApplicationContext(), getSupportFragmentManager());
+        mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the adapter.
-        mViewPager = (CustomViewPager) findViewById(R.id.pager);
+        mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mViewPagerAdapter);
 
         // Bind the underline indicator to the adapter
