@@ -44,7 +44,6 @@ import com.viewpagerindicator.UnderlinePageIndicator;
 
 import java.lang.ref.WeakReference;
 
-
 public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity implements ActionBar.TabListener {
     private static final String TAG = "BalancingRobotFullSizeActivity";
     public static final boolean D = BuildConfig.DEBUG; // This is automatically set when building
@@ -131,8 +130,7 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
             public void onPageSelected(int position) {
                 if (D)
                     Log.d(TAG, "ViewPager position: " + position);
-                if (position < actionBar.getTabCount()) // Needed for when in landscape mode
-                    actionBar.setSelectedNavigationItem(position);
+                actionBar.setSelectedNavigationItem(position);
             }
         });
 
@@ -226,7 +224,7 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
                 return true;
             case R.id.action_settings:
                 // TODO: Open up the settings dialog
-                return true;
+                //return true;
         }
         return super.onOptionsItemSelected(item);
     }
