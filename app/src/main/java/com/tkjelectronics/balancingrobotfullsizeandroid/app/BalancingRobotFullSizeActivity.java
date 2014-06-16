@@ -33,6 +33,7 @@ import android.os.Message;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
@@ -161,6 +162,8 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
                             .setText(mViewPagerAdapter.getPageTitle(i))
                             .setTabListener(this));
         }
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON); // Keep the screen on while the user is riding the robot
     }
 
     public void showToast(String message, int duration) {
