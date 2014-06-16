@@ -53,10 +53,9 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
                 return new PIDFragment();
             case MAP_FRAGMENT:
                 //return new MapFragment();
-            case GRAPH_FRAGMENT:
-                //return new GraphFragment();
-
                 return PlaceholderFragment.newInstance(position + 1);
+            case GRAPH_FRAGMENT:
+                return new GraphFragment();
         }
         return null;
     }

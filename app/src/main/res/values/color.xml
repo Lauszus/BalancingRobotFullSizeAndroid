@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Custom colors for arrow buttons -->
     <color name="arrow_background_pressed">#FF575757</color>

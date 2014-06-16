@@ -42,6 +42,8 @@ public class BluetoothProtocol {
 
     static final byte START_INFO = 8;
     static final byte STOP_INFO = 9;
+    static final byte START_IMU = 10;
+    static final byte STOP_IMU = 11;
 
     static final String commandHeader = "$S>"; // Standard command header
     static final String responseHeader = "$S<"; // Standard response header
@@ -208,6 +210,22 @@ public class BluetoothProtocol {
         sendCommand(output); // Send output
     }
 
+    public void startImu() {
+        byte output[] = {
+                START_IMU, // Cmd
+                0, // Length
+        };
+        sendCommand(output); // Send output
+    }
+
+    public void stopImu() {
+        byte output[] = {
+                STOP_IMU, // Cmd
+                0, // Length
+        };
+        sendCommand(output); // Send output
+    }
+
     private byte[] concat(byte[] A, byte[] B) { // Source: http://stackoverflow.com/a/80503/2175837
         int aLen = A.length;
         int bLen = B.length;
@@ -292,7 +310,6 @@ public class BluetoothProtocol {
                             Log.i(TAG, "Target: " + Integer.toString(target));
                         break;
 
-                    // TODO: Implement the rest of the protocol
                     case GET_TURNING:
                         message = mHandler.obtainMessage(BalancingRobotFullSizeActivity.MESSAGE_READ); // Send message back to the UI Activity
                         bundle = new Bundle();
@@ -304,16 +321,20 @@ public class BluetoothProtocol {
                             Log.i(TAG, "Turning: " + Integer.toString(input[0]));
                         break;
                     case GET_KALMAN:
-                        int QangleValue = input[0] | (input[1] << 8);
-                        int QbiasValue = input[2] | (input[3] << 8);
-                        int RmeasureValue = input[4] | (input[5] << 8);
+                        int Qangle = input[0] | (input[1] << 8);
+                        int Qbias = input[2] | (input[3] << 8);
+                        int Rmeasure = input[4] | (input[5] << 8);
 
-                        /*Qangle.setText(Float.toString((float) QangleValue / 10000.0));
-                        Qbias.setText(Float.toString((float) QbiasValue / 10000.0));
-                        Rmeasure.setText(Float.toString((float) RmeasureValue / 10000.0));*/
+                        message = mHandler.obtainMessage(BalancingRobotFullSizeActivity.MESSAGE_READ); // Send message back to the UI Activity
+                        bundle = new Bundle();
+                        bundle.putString(BalancingRobotFullSizeActivity.QANGLE_VALUE, String.format("%.4f", (float)Qangle / 10000.0f));
+                        bundle.putString(BalancingRobotFullSizeActivity.QBIAS_VALUE, String.format("%.4f", (float)Qbias / 10000.0f));
+                        bundle.putString(BalancingRobotFullSizeActivity.RMEASURE_VALUE, String.format("%.4f", (float)Rmeasure / 10000.0f));
+                        message.setData(bundle);
+                        mHandler.sendMessage(message);
 
                         if (D)
-                            Log.i(TAG, "Kalman: " + QangleValue + " " + QbiasValue + " " + RmeasureValue);
+                            Log.i(TAG, "Kalman: " + Qangle + " " + Qbias + " " + Rmeasure);
                         break;
                     case START_INFO:
                         int speed = input[0] | (input[1] << 8);
@@ -335,6 +356,22 @@ public class BluetoothProtocol {
 
                         if (D)
                             Log.v(TAG, "Speed: " + speed + " Current: " + current + " Turning: " + turning + " Battery: " + battery + " Run time: " + runTime);
+                        break;
+                    case START_IMU:
+                        int acc = input[0] | (input[1] << 8);
+                        int gyro = input[2] | (input[3] << 8);
+                        int kalman = input[4] | (input[5] << 8);
+
+                        message = mHandler.obtainMessage(BalancingRobotFullSizeActivity.MESSAGE_READ); // Send message back to the UI Activity
+                        bundle = new Bundle();
+                        bundle.putString(BalancingRobotFullSizeActivity.ACC_ANGLE, String.format("%.2f", (float)acc / 100.0f));
+                        bundle.putString(BalancingRobotFullSizeActivity.GYRO_ANGLE, String.format("%.2f", (float)gyro / 100.0f));
+                        bundle.putString(BalancingRobotFullSizeActivity.KALMAN_ANGLE, String.format("%.2f", (float)kalman / 100.0f));
+                        message.setData(bundle);
+                        mHandler.sendMessage(message);
+
+                        if (D)
+                            Log.v(TAG, "Acc: " + acc + " Gyro: " + gyro + " Kalman: " + kalman);
                         break;
                     default:
                         if (D)
