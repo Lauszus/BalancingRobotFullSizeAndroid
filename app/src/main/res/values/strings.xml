@@ -20,6 +20,14 @@
     <string name="title_other_devices">Other Available Devices</string>
     <string name="button_scan">Scan for devices</string>
 
+    <!-- Info Fragment -->
+    <string name="manufacturer">by Mads Bornebusch and Kristian Lauszus</string>
+    <string name="pwm">PWM:</string>
+    <string name="currentDraw">Current draw:</string>
+    <string name="turningValue">Turning value:</string>
+    <string name="battery">Battery level:</string>
+    <string name="runTime">Run time:</string>
+
     <!-- PID Fragment -->
     <string name="Kp">P:</string>
     <string name="Ki">I:</string>
@@ -29,11 +37,5 @@
     <string name="currentValues">Current Values:</string>
     <string name="adjustValues">Adjust Values:</string>
     <string name="updateValues">Press to update PID values</string>
-
-    <!-- TOOD: Removee these -->
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
-    <string name="hello_world">Hello world!</string>
 
 </resources>

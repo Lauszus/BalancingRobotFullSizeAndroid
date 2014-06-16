@@ -40,6 +40,9 @@ public class BluetoothProtocol {
     static final byte SET_KALMAN = 6;
     static final byte GET_KALMAN = 7;
 
+    static final byte START_INFO = 8;
+    static final byte STOP_INFO = 9;
+
     static final String commandHeader = "$S>"; // Standard command header
     static final String responseHeader = "$S<"; // Standard response header
     static final String responseEnd = "\r\n";
@@ -189,6 +192,22 @@ public class BluetoothProtocol {
         sendCommand(output); // Send output
     }
 
+    public void startInfo() {
+        byte output[] = {
+                START_INFO, // Cmd
+                0, // Length
+        };
+        sendCommand(output); // Send output
+    }
+
+    public void stopInfo() {
+        byte output[] = {
+                STOP_INFO, // Cmd
+                0, // Length
+        };
+        sendCommand(output); // Send output
+    }
+
     private byte[] concat(byte[] A, byte[] B) { // Source: http://stackoverflow.com/a/80503/2175837
         int aLen = A.length;
         int bLen = B.length;
@@ -295,6 +314,27 @@ public class BluetoothProtocol {
 
                         if (D)
                             Log.i(TAG, "Kalman: " + QangleValue + " " + QbiasValue + " " + RmeasureValue);
+                        break;
+                    case START_INFO:
+                        int speed = input[0] | (input[1] << 8);
+                        int current = input[2] | (input[3] << 8);
+                        int turning = input[4] | (input[5] << 8);
+                        int battery = input[6];
+                        long runTime = input[7] | (input[8] << 8) | ((long)input[9] << 16) | ((long)input[10] << 24);
+
+                        message = mHandler.obtainMessage(BalancingRobotFullSizeActivity.MESSAGE_READ); // Send message back to the UI Activity
+                        bundle = new Bundle();
+                        bundle.putInt(BalancingRobotFullSizeActivity.SPEED_VALUE, speed);
+                        bundle.putInt(BalancingRobotFullSizeActivity.CURRENT_DRAW, current);
+                        bundle.putInt(BalancingRobotFullSizeActivity.TURNING_VALUE, turning);
+                        bundle.putInt(BalancingRobotFullSizeActivity.BATTERY_LEVEL, battery);
+                        bundle.putLong(BalancingRobotFullSizeActivity.RUN_TIME, runTime);
+
+                        message.setData(bundle);
+                        mHandler.sendMessage(message);
+
+                        if (D)
+                            Log.v(TAG, "Speed: " + speed + " Current: " + current + " Turning: " + turning + " Battery: " + battery + " Run time: " + runTime);
                         break;
                     default:
                         if (D)

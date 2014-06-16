@@ -30,4 +30,17 @@ mvn install:install-file \
 -Dfile=library/build/outputs/aar/library-2.4.1.aar \
 -DlocalRepositoryPath=../
 
+cd ../
+
+echo "Installing SpeedometerView"
+
+mvn install:install-file \
+-DgroupId=com.cardiomood.android.speedometer \
+-DartifactId=speedometer \
+-Dversion=1.0.1 \
+-DgeneratePom=true \
+-Dpackaging=aar \
+-Dfile=SpeedometerView-1.0.1.aar \
+-DlocalRepositoryPath=./
+
 echo "Done installing libraries"

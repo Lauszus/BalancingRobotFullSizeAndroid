@@ -29,4 +29,5 @@ dependencies {
     compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
     compile 'com.viewpagerindicator:viewpagerindicator:2.4.1'
     compile 'com.jjoe64.graphview:graphview:3.1.1'
+    compile 'com.cardiomood.android.speedometer:speedometer:1.0.1'
 }

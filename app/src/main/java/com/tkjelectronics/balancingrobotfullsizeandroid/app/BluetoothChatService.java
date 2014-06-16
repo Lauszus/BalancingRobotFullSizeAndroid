@@ -494,7 +494,7 @@ public class BluetoothChatService {
                     }
                 } catch (IOException e) {
                     if (D)
-                        Log.e(TAG, "disconnected", e);
+                        Log.i(TAG, "Disconnected", e);
                     if (!stopReading) {
                         cancel();
                         connectionLost();

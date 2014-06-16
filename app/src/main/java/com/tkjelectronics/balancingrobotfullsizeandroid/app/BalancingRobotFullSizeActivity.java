@@ -65,6 +65,12 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
     public static final String TARGET_ANGLE = "target_angle";
     public static final String TURNING_SCALE = "turning_scale";
 
+    public static final String SPEED_VALUE = "speed_value";
+    public static final String CURRENT_DRAW = "current_draw";
+    public static final String TURNING_VALUE = "turning_value";
+    public static final String BATTERY_LEVEL = "battery_level";
+    public static final String RUN_TIME = "run_time";
+
     // Intent request codes
     private static final int REQUEST_CONNECT_DEVICE = 1;
     private static final int REQUEST_ENABLE_BT = 2;
@@ -83,6 +89,8 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
 
     /** The {@link UnderlinePageIndicator} that will host the section contents. */
     UnderlinePageIndicator mUnderlinePageIndicator;
+
+    public int currentTabSelected;
 
     ViewPagerAdapter mViewPagerAdapter;
     CustomViewPager mViewPager;
@@ -183,6 +191,19 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
         finish(); // Exits the app
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (D)
+            Log.d(TAG, "- ON PAUSE -");
+        if (mChatService != null) { // Send stop command and stop sending graph data command
+            if (mChatService.getState() == BluetoothChatService.STATE_CONNECTED) {
+                mChatService.mBluetoothProtocol.stopInfo();
+                //mChatService.mBluetoothProtocol.stopGraph();
+            }
+        }
+    }
+
     private void setupBTService() {
         if (mChatService != null)
             return;
@@ -231,16 +252,59 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
 
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+        if (D)
+            Log.d(TAG, "onTabSelected: " + tab.getPosition());
+
+        currentTabSelected = tab.getPosition();
         // When the given tab is selected, switch to the corresponding page in the ViewPager.
-        mUnderlinePageIndicator.setCurrentItem(tab.getPosition());
+        mUnderlinePageIndicator.setCurrentItem(currentTabSelected);
+
+        if (checkTab(ViewPagerAdapter.INFO_FRAGMENT) && mChatService != null && mChatService.getState() == BluetoothChatService.STATE_CONNECTED)
+            mChatService.mBluetoothProtocol.startInfo();
+        /*
+        else if (checkTab(ViewPagerAdapter.GRAPH_FRAGMENT) && mChatService != null) {
+            if (mChatService.getState() == BluetoothChatService.STATE_CONNECTED) {
+                mChatService.write(getKalman);
+                if (GraphFragment.mToggleButton != null) {
+                    if (GraphFragment.mToggleButton.isChecked())
+                        mChatService.write(imuBegin); // Request data
+                    else
+                        mChatService.write(imuStop); // Stop sending data
+                }
+            }
+        }
+
+        if (!checkTab(ViewPagerAdapter.GRAPH_FRAGMENT)) { // Needed when the user rotates the screen
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE); // Hide the keyboard
+            imm.hideSoftInputFromWindow(getWindow().getDecorView().getApplicationWindowToken(), 0);
+        }
+        */
     }
 
     @Override
     public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+        if (D)
+            Log.d(TAG, "onTabUnselected: " + tab.getPosition() + " " + currentTabSelected);
+
+        if (checkTab(ViewPagerAdapter.INFO_FRAGMENT) && mChatService != null && mChatService.getState() == BluetoothChatService.STATE_CONNECTED) {
+            mChatService.mBluetoothProtocol.stopInfo();
+        }
+        /*else if (checkTab(ViewPagerAdapter.GRAPH_FRAGMENT) && mChatService != null && mChatService.getState() == BluetoothChatService.STATE_CONNECTED) {
+            mChatService.write(imuStop);
+        }
+        if (checkTab(ViewPagerAdapter.GRAPH_FRAGMENT)) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE); // Hide the keyboard
+            imm.hideSoftInputFromWindow(getWindow().getDecorView().getApplicationWindowToken(), 0);
+        }
+        */
     }
 
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+    }
+
+    public boolean checkTab(int tab) {
+        return (currentTabSelected == tab);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -295,6 +359,7 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
     private static class BluetoothHandler extends Handler {
         private final WeakReference<BalancingRobotFullSizeActivity> mActivity; // See: http://www.androiddesignpatterns.com/2013/01/inner-class-handler-memory-leak.html
         PIDFragment pidFragment;
+        InfoFragment infoFragment;
         private String mConnectedDeviceName; // Name of the connected device
 
         BluetoothHandler(BalancingRobotFullSizeActivity activity) {
@@ -328,6 +393,16 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
                                     }
                                 }
                             }, 1000); // Wait 1 second before sending the message
+
+                            if (mBalancingRobotFullSizeActivity.checkTab(ViewPagerAdapter.INFO_FRAGMENT)) {
+                                mHandler.postDelayed(new Runnable() {
+                                    public void run() {
+                                        BalancingRobotFullSizeActivity mBalancingRobotFullSizeActivity = mActivity.get();
+                                        if (mBalancingRobotFullSizeActivity != null)
+                                            mBalancingRobotFullSizeActivity.mChatService.mBluetoothProtocol.startInfo();
+                                    }
+                                }, 1000); // Wait 1 second before sending the message
+                            }
 
                             /*mHandler.postDelayed(new Runnable() {
                                 public void run() {
@@ -369,39 +444,24 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
                     Bundle data = msg.getData();
                     if (data != null) {
                         pidFragment = (PIDFragment) mBalancingRobotFullSizeActivity.getFragment(ViewPagerAdapter.PID_FRAGMENT);
-                        if (pidFragment == null)
-                            return;
-                        if (data.containsKey(KP_VALUE) && data.containsKey(KI_VALUE) && data.containsKey(KD_VALUE))
-                            pidFragment.updatePID(data.getString(KP_VALUE), data.getString(KI_VALUE), data.getString(KD_VALUE));
-                        else if (data.containsKey(TARGET_ANGLE))
-                            pidFragment.updateAngle(data.getString(TARGET_ANGLE));
-                        else if (data.containsKey(TURNING_SCALE))
-                            pidFragment.updateTurning(data.getInt(TURNING_SCALE));
+                        if (pidFragment != null) {
+                            if (data.containsKey(KP_VALUE) && data.containsKey(KI_VALUE) && data.containsKey(KD_VALUE))
+                                pidFragment.updatePID(data.getString(KP_VALUE), data.getString(KI_VALUE), data.getString(KD_VALUE));
+                            else if (data.containsKey(TARGET_ANGLE))
+                                pidFragment.updateAngle(data.getString(TARGET_ANGLE));
+                            else if (data.containsKey(TURNING_SCALE))
+                                pidFragment.updateTurning(data.getInt(TURNING_SCALE));
+                        }
+                        infoFragment = (InfoFragment) mBalancingRobotFullSizeActivity.getFragment(ViewPagerAdapter.INFO_FRAGMENT);
+                        if (infoFragment != null) {
+                            if (data.containsKey(SPEED_VALUE) && data.containsKey(CURRENT_DRAW) && data.containsKey(TURNING_VALUE) && data.containsKey(BATTERY_LEVEL) && data.containsKey(RUN_TIME))
+                                infoFragment.updateView(data.getInt(SPEED_VALUE), data.getInt(CURRENT_DRAW), data.getInt(TURNING_VALUE), data.getInt(BATTERY_LEVEL), data.getLong(RUN_TIME));
+                        }
                     }
-                    /*
-                    if (newInfo || newStatus) {
-                        newInfo = false;
-                        newStatus = false;
-                        InfoFragment.updateView();
-                    }
-                    if (newIMUValues) {
-                        newIMUValues = false;
-                        GraphFragment.updateIMUValues();
-                    }
-                    if (newKalmanValues) {
-                        newKalmanValues = false;
-                        GraphFragment.updateKalmanValues();
-                    }
-                    if (pairingWithDevice) {
-                        pairingWithDevice = false;
-                        BalanduinoActivity.showToast("Now enable discovery of your device", Toast.LENGTH_LONG);
-                    }
-                    */
                     break;
                 case MESSAGE_DEVICE_NAME:
-                    // Save the connected device's name
                     if (msg.getData() != null)
-                        mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
+                        mConnectedDeviceName = msg.getData().getString(DEVICE_NAME); // Save the connected device's name
                     break;
                 case MESSAGE_DISCONNECTED:
                     mBalancingRobotFullSizeActivity.supportInvalidateOptionsMenu();

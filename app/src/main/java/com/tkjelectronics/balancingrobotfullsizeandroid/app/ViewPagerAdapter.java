@@ -32,13 +32,10 @@ import com.actionbarsherlock.app.SherlockFragment;
 import java.util.Locale;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
-    /*public static final int IMU_FRAGMENT = 0;
-    public static final int JOYSTICK_FRAGMENT = 1;
-    public static final int GRAPH_FRAGMENT = 2;
-    public static final int PID_FRAGMENT = 3;
-    public static final int INFO_FRAGMENT = 4;*/
-
+    public static final int INFO_FRAGMENT = 0;
     public static final int PID_FRAGMENT = 1;
+    public static final int MAP_FRAGMENT = 2;
+    public static final int GRAPH_FRAGMENT = 3;
 
     Context context;
 
@@ -49,64 +46,39 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public SherlockFragment getItem(int position) {
-        /*
         switch (position) {
-            case 0:
-                return new ImuFragment();
-            case 1:
-                return new JoystickFragment();
-            case 2:
-                return new GraphFragment();
-            case 3:
-                return new PIDFragment();
-            case 4:
+            case INFO_FRAGMENT:
                 return new InfoFragment();
-            default:
-                return null;
-        }
-        */
-        switch (position) {
-            case 1:
+            case PID_FRAGMENT:
                 return new PIDFragment();
-            default:
-                // getItem is called to instantiate the fragment for the given page.
-                // Return a PlaceholderFragment (defined as a static inner class below).
+            case MAP_FRAGMENT:
+                //return new MapFragment();
+            case GRAPH_FRAGMENT:
+                //return new GraphFragment();
+
                 return PlaceholderFragment.newInstance(position + 1);
         }
+        return null;
     }
 
     @Override
     public int getCount() {
-        // Return number of tabs
-        //return 5;
-        return 3;
+        return 4; // Return number of tabs
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
         Locale l = Locale.getDefault();
         switch (position) {
-            case 0:
-                return context.getString(R.string.title_section1).toUpperCase(l);
-            case 1:
-                return "PID";
-            case 2:
-                return context.getString(R.string.title_section3).toUpperCase(l);
-        }
-        /*
-        switch (position) {
-            case 0:
-                return "IMU";
-            case 1:
-                return "Joystick";
-            case 2:
-                return "Graph";
-            case 3:
-                return "PID";
-            case 4:
+            case INFO_FRAGMENT:
                 return "Info";
+            case PID_FRAGMENT:
+                return "PID";
+            case MAP_FRAGMENT:
+                return "Map";
+            case GRAPH_FRAGMENT:
+                return "Graph";
         }
-        */
         return null;
     }
 
