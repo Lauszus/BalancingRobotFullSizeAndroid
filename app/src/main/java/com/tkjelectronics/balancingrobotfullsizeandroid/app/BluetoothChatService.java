@@ -419,6 +419,8 @@ public class BluetoothChatService {
                             while (true) {
                                 int start = string.indexOf(BluetoothProtocol.responseHeader, end);
                                 end = string.indexOf("\r\n", start);
+                                if (D)
+                                    Log.d(TAG, "Start: " + start + " End: " + end);
                                 if (start == -1) { // In case there is no response header at all assume that the message is corrupt and therefore discard the buffer
                                     for (int i = 0; i < buffer.length; i++)
                                         buffer[i] = 0; // Reset values

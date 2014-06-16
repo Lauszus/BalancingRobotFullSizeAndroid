@@ -158,7 +158,7 @@ public class PIDFragment extends SherlockFragment {
                         counter += 25;
                     }
 
-                    if (mTargetAngleSeekBarValue.getText() != null && !mTargetAngleSeekBarValue.getText().equals(oldKpValue)) {
+                    if (mTargetAngleSeekBarValue.getText() != null && !mTargetAngleSeekBarValue.getText().equals(oldTargetAngleValue)) {
                         oldTargetAngleValue = mTargetAngleSeekBarValue.getText();
                         mHandler.postDelayed(new Runnable() {
                             public void run() {
@@ -189,6 +189,72 @@ public class PIDFragment extends SherlockFragment {
                 }
             }
         });
+
+
+        Button mKpUpArrow = (Button) v.findViewById(R.id.KpUpArrow);
+        Button mKpDownArrow = (Button) v.findViewById(R.id.KpDownArrow);
+
+        Button mKiUpArrow = (Button) v.findViewById(R.id.KiUpArrow);
+        Button mKiDownArrow = (Button) v.findViewById(R.id.KiDownArrow);
+
+        Button mKdUpArrow = (Button) v.findViewById(R.id.KdUpArrow);
+        Button mKdDownArrow = (Button) v.findViewById(R.id.KdDownArrow);
+
+        Button mTargetAngleUpArrow = (Button) v.findViewById(R.id.TargetAngleUpArrow);
+        Button mTargetAngleDownArrow = (Button) v.findViewById(R.id.TargetAngleDownArrow);
+
+        mKpUpArrow.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mKpSeekBar.setProgress(mKpSeekBar.getProgress() + 10); // Increase with 0.1
+            }
+        });
+        mKpDownArrow.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mKpSeekBar.setProgress(mKpSeekBar.getProgress() - 10); // Decrease with 0.1
+            }
+        });
+
+        mKiUpArrow.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mKiSeekBar.setProgress(mKiSeekBar.getProgress() + 10); // Increase with 0.1
+            }
+        });
+        mKiDownArrow.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mKiSeekBar.setProgress(mKiSeekBar.getProgress() - 10); // Decrease with 0.1
+            }
+        });
+
+        mKdUpArrow.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mKdSeekBar.setProgress(mKdSeekBar.getProgress() + 10); // Increase with 0.1
+            }
+        });
+        mKdDownArrow.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mKdSeekBar.setProgress(mKdSeekBar.getProgress() - 10); // Decrease with 0.1
+            }
+        });
+
+        mTargetAngleUpArrow.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTargetAngleSeekBar.setProgress(mTargetAngleSeekBar.getProgress() + 10); // Increase with 0.1
+            }
+        });
+        mTargetAngleDownArrow.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTargetAngleSeekBar.setProgress(mTargetAngleSeekBar.getProgress() - 10); // Decrease with 0.1
+            }
+        });
+
         updateButton();
         return v;
     }
@@ -199,42 +265,31 @@ public class PIDFragment extends SherlockFragment {
             if (!KpValue.isEmpty())
                 Kp = KpValue;
             mKpView.setText(Kp);
-            if (!Kp.equals("")) {
-                float value = Float.parseFloat(Kp);
-                mKpSeekBarValue.setText(String.format("%.2f", value)); // Two decimal places
-                mKpSeekBar.setProgress((int) (value * 100.0f));
-            }
+            if (!Kp.equals(""))
+                mKpSeekBar.setProgress((int) (Float.parseFloat(Kp) * 100.0f));
         }
         if (mKiView != null && mKiSeekBar != null && mKiSeekBarValue != null) {
             String Ki = "";
             if (!KiValue.isEmpty())
                 Ki = KiValue;
             mKiView.setText(Ki);
-            if (!Ki.equals("")) {
-                float value = Float.parseFloat(Ki);
-                mKiSeekBarValue.setText(String.format("%.2f", value)); // Two decimal places
-                mKiSeekBar.setProgress((int) (value * 100.0f));
-            }
+            if (!Ki.equals(""))
+                mKiSeekBar.setProgress((int) (Float.parseFloat(Ki) * 100.0f));
         }
         if (mKdView != null && mKdSeekBar != null && mKdSeekBarValue != null) {
             String Kd = "";
             if (!KdValue.isEmpty())
                 Kd = KdValue;
             mKdView.setText(Kd);
-            if (!Kd.equals("")) {
-                float value = Float.parseFloat(Kd);
-                mKdSeekBarValue.setText(String.format("%.2f", value)); // Two decimal places
-                mKdSeekBar.setProgress((int) (value * 100.0f));
-            }
+            if (!Kd.equals(""))
+                mKdSeekBar.setProgress((int) (Float.parseFloat(Kd) * 100.0f));
         }
     }
 
     public void updateAngle(String targetAngleValue) {
         if (mTargetAngleView != null && mTargetAngleSeekBar != null && mTargetAngleSeekBarValue != null && !targetAngleValue.isEmpty()) {
-            float value = Float.parseFloat(targetAngleValue);
-            mTargetAngleView.setText(String.format("%.2f", value));
-            mTargetAngleSeekBarValue.setText(String.format("%.2f", value)); // Two decimal places
-            mTargetAngleSeekBar.setProgress((int) ((value + 30) * 100.0f));
+            mTargetAngleView.setText(targetAngleValue);
+            mTargetAngleSeekBar.setProgress((int) ((Float.parseFloat(targetAngleValue) + 30) * 100.0f));
         }
     }
 

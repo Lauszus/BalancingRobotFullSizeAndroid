@@ -202,17 +202,17 @@ public class BluetoothProtocol {
     public void parseData(byte msg[], int offset, int length) {
         System.arraycopy(msg, offset, buffer, 0, length);
 
+        String readMessage = new String(buffer, 0, length);
+
+        if (D)
+            Log.d(TAG, "Received string: " + readMessage);
+
         int[] data = new int[length];
         for (int i = 0; i < length; i++) {
             data[i] = buffer[i] & 0xFF; // Cast to unsigned value
             if (D)
                 Log.d(TAG, "Data[" + i + "]: " + data[i]);
         }
-
-        String readMessage = new String(buffer, 0, length);
-
-        if (D)
-            Log.d(TAG, "Received string: " + readMessage);
 
         if (length < responseHeader.length() + 2) // We should have at least received the header, cmd and length
             return;
