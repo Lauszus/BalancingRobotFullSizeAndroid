@@ -11,6 +11,16 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+    signingConfigs {
+        release
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+        }
+    }
 }
 
 repositories {
@@ -20,8 +30,19 @@ repositories {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:support-v4:19.1.+'
+    compile 'com.google.android.gms:play-services:4.4.+'
     compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
     compile 'com.viewpagerindicator:viewpagerindicator:2.4.1'
     compile 'com.jjoe64.graphview:graphview:3.1.1'
     compile 'com.cardiomood.android.speedometer:speedometer:1.0.1'
+}
+
+// These values are all set in my global gradle.properties file
+if (project.hasProperty('storeFile') && project.hasProperty('storePassword') && project.hasProperty('keyAlias') && project.hasProperty('keyPassword')) {
+    android.signingConfigs.release.storeFile = file(storeFile)
+    android.signingConfigs.release.storePassword = storePassword
+    android.signingConfigs.release.keyAlias = keyAlias
+    android.signingConfigs.release.keyPassword = keyPassword
+} else {
+    android.buildTypes.release.signingConfig = null
 }
