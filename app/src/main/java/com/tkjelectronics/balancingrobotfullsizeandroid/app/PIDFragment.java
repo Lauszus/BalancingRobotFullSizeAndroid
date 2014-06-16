@@ -201,22 +201,6 @@ public class PIDFragment extends SherlockFragment {
                         }, counter); // Wait before sending the message
                         counter += 25;
                     }
-
-                    /*
-                    if (counter != 0) {
-                        mHandler.postDelayed(new Runnable() {
-                            public void run() {
-                                BalancingRobotFullSizeActivity activity = (BalancingRobotFullSizeActivity) getActivity();
-                                if (activity != null) {
-                                    activity.mChatService.mBluetoothProtocol.getTurning();
-                                    activity.mChatService.mBluetoothProtocol.getKalman();
-                                }
-                            }
-                        }, counter); // Wait before sending the message
-                        if (D)
-                            Log.i(TAG, mKdSeekBar.getProgress() + " " + mKiSeekBar.getProgress() + " " + mKdSeekBar.getProgress() + " " + mTargetAngleSeekBar.getProgress());
-                    }
-                    */
                     counter = 0; // Reset counter
                 }
             }
@@ -241,52 +225,52 @@ public class PIDFragment extends SherlockFragment {
         mKpUpArrow.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mKpSeekBar.setProgress(mKpSeekBar.getProgress() + 10); // Increase with 0.1
+                mKpSeekBar.setProgress(round10(mKpSeekBar.getProgress() + 10)); // Increase with 0.1 and round to nearest multiple of 10
             }
         });
         mKpDownArrow.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mKpSeekBar.setProgress(mKpSeekBar.getProgress() - 10); // Decrease with 0.1
+                mKpSeekBar.setProgress(round10(mKpSeekBar.getProgress() - 10)); // Decrease with 0.1 and round to nearest multiple of 10
             }
         });
 
         mKiUpArrow.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mKiSeekBar.setProgress(mKiSeekBar.getProgress() + 10); // Increase with 0.1
+                mKiSeekBar.setProgress(round10(mKiSeekBar.getProgress() + 10)); // Increase with 0.1 and round to nearest multiple of 10
             }
         });
         mKiDownArrow.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mKiSeekBar.setProgress(mKiSeekBar.getProgress() - 10); // Decrease with 0.1
+                mKiSeekBar.setProgress(round10(mKiSeekBar.getProgress() - 10)); // Decrease with 0.1 and round to nearest multiple of 10
             }
         });
 
         mKdUpArrow.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mKdSeekBar.setProgress(mKdSeekBar.getProgress() + 10); // Increase with 0.1
+                mKdSeekBar.setProgress(round10(mKdSeekBar.getProgress() + 10)); // Increase with 0.1 and round to nearest multiple of 10
             }
         });
         mKdDownArrow.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mKdSeekBar.setProgress(mKdSeekBar.getProgress() - 10); // Decrease with 0.1
+                mKdSeekBar.setProgress(round10(mKdSeekBar.getProgress() - 10)); // Decrease with 0.1 and round to nearest multiple of 10
             }
         });
 
         mTargetAngleUpArrow.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mTargetAngleSeekBar.setProgress(mTargetAngleSeekBar.getProgress() + 10); // Increase with 0.1
+                mTargetAngleSeekBar.setProgress(round10(mTargetAngleSeekBar.getProgress() + 10)); // Increase with 0.1 and round to nearest multiple of 10
             }
         });
         mTargetAngleDownArrow.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mTargetAngleSeekBar.setProgress(mTargetAngleSeekBar.getProgress() - 10); // Decrease with 0.1
+                mTargetAngleSeekBar.setProgress(round10(mTargetAngleSeekBar.getProgress() - 10)); // Decrease with 0.1 and round to nearest multiple of 10
             }
         });
 
@@ -305,6 +289,10 @@ public class PIDFragment extends SherlockFragment {
 
         updateButton();
         return v;
+    }
+
+    private int round10(int n) {
+        return Math.round((float)n / 10.0f) * 10;
     }
 
     public void updatePID(String Kp, String Ki, String Kd) {
