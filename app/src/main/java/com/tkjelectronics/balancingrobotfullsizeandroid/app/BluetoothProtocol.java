@@ -214,15 +214,21 @@ public class BluetoothProtocol {
                 Log.d(TAG, "Data[" + i + "]: " + data[i]);
         }
 
-        if (length < responseHeader.length() + 2) // We should have at least received the header, cmd and length
+        if (length < responseHeader.length() + 2) { // We should have at least received the header, cmd and length
+            if (D)
+                Log.e(TAG, "String is too short!");
             return;
+        }
 
         // TODO: Remove whitespace in front
         if (new String(buffer).startsWith(responseHeader)) {
             int cmd = data[responseHeader.length()];
             int msgLength = data[responseHeader.length() + 1];
-            if (msgLength > (length - responseHeader.length() - 3)) // Check if there is enough data - there needs to be the header, cmd, length, data and checksum
+            if (msgLength > (length - responseHeader.length() - 3)) { // Check if there is enough data - there needs to be the header, cmd, length, data and checksum
+                if (D)
+                    Log.e(TAG, "Not enough data!");
                 return;
+            }
 
             int input[] = new int[msgLength];
             int i;
@@ -267,7 +273,12 @@ public class BluetoothProtocol {
 
                     // TODO: Implement the rest of the protocol
                     case GET_TURNING:
-                        //turnScale.setText(Integer.toString(input[0]));
+                        message = mHandler.obtainMessage(BalancingRobotFullSizeActivity.MESSAGE_READ); // Send message back to the UI Activity
+                        bundle = new Bundle();
+                        bundle.putInt(BalancingRobotFullSizeActivity.TURNING_SCALE, input[0]);
+                        message.setData(bundle);
+                        mHandler.sendMessage(message);
+
                         if (D)
                             Log.i(TAG, "Turning: " + Integer.toString(input[0]));
                         break;

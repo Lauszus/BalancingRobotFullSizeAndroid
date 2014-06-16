@@ -38,9 +38,9 @@ public class PIDFragment extends SherlockFragment {
     private static final boolean D = BalancingRobotFullSizeActivity.D;
 
     Button mButton;
-    TextView mKpView, mKiView, mKdView, mTargetAngleView;
-    SeekBar mKpSeekBar, mKiSeekBar, mKdSeekBar, mTargetAngleSeekBar;
-    CharSequence oldKpValue, oldKiValue, oldKdValue, oldTargetAngleValue;
+    TextView mKpView, mKiView, mKdView, mTargetAngleView, mTurningView;
+    SeekBar mKpSeekBar, mKiSeekBar, mKdSeekBar, mTargetAngleSeekBar, mTurningSeekBar;
+    CharSequence oldKpValue, oldKiValue, oldKdValue, oldTargetAngleValue, oldTurningValue;
 
     final Handler mHandler = new Handler();
     int counter = 0;
@@ -56,9 +56,10 @@ public class PIDFragment extends SherlockFragment {
         mKiView = (TextView) v.findViewById(R.id.textView2);
         mKdView = (TextView) v.findViewById(R.id.textView3);
         mTargetAngleView = (TextView) v.findViewById(R.id.textView4);
+        mTurningView = (TextView) v.findViewById(R.id.textView5);
 
         mKpSeekBar = (SeekBar) v.findViewById(R.id.KpSeekBar);
-        mKpSeekBar.setMax(2000); // 0-20
+        mKpSeekBar.setMax(1000); // 0-10
         final TextView mKpSeekBarValue = (TextView) v.findViewById(R.id.KpValue);
         mKpSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {
@@ -72,7 +73,7 @@ public class PIDFragment extends SherlockFragment {
         mKpSeekBar.setProgress(mKpSeekBar.getMax() / 2); // Call this after the OnSeekBarChangeListener is created
 
         mKiSeekBar = (SeekBar) v.findViewById(R.id.KiSeekBar);
-        mKiSeekBar.setMax(2000); // 0-20
+        mKiSeekBar.setMax(1000); // 0-10
         final TextView mKiSeekBarValue = (TextView) v.findViewById(R.id.KiValue);
         mKiSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {
@@ -87,7 +88,7 @@ public class PIDFragment extends SherlockFragment {
         mKiSeekBar.setProgress(mKiSeekBar.getMax() / 2); // Call this after the OnSeekBarChangeListener is created
 
         mKdSeekBar = (SeekBar) v.findViewById(R.id.KdSeekBar);
-        mKdSeekBar.setMax(2000); // 0-20
+        mKdSeekBar.setMax(1000); // 0-10
         final TextView mKdSeekBarValue = (TextView) v.findViewById(R.id.KdValue);
         mKdSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {
@@ -113,6 +114,20 @@ public class PIDFragment extends SherlockFragment {
             }
         });
         mTargetAngleSeekBar.setProgress(mTargetAngleSeekBar.getMax() / 2); // Call this after the OnSeekBarChangeListener is created
+
+        mTurningSeekBar = (SeekBar) v.findViewById(R.id.TurningSeekBar);
+        mTurningSeekBar.setMax(100); // 0-100
+        final TextView mTurningSeekBarValue = (TextView) v.findViewById(R.id.TurningValue);
+        mTurningSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {
+                mTurningSeekBarValue.setText(Integer.toString(progress)); // Set it directly
+            }
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+        mTurningSeekBar.setProgress(mTurningSeekBar.getMax() / 2); // Call this after the OnSeekBarChangeListener is created
 
         mButton = (Button) v.findViewById(R.id.button);
         mButton.setOnClickListener(new OnClickListener() {
@@ -166,6 +181,27 @@ public class PIDFragment extends SherlockFragment {
                         }, counter); // Wait before sending the message
                         counter += 25;
                     }
+
+                    if (mTurningSeekBarValue.getText() != null && !mTurningSeekBarValue.getText().equals(oldTurningValue)) {
+                        oldTurningValue = mTurningSeekBarValue.getText();
+                        mHandler.postDelayed(new Runnable() {
+                            public void run() {
+                                BalancingRobotFullSizeActivity activity = (BalancingRobotFullSizeActivity) getActivity();
+                                if (activity != null)
+                                    activity.mChatService.mBluetoothProtocol.setTurning(Byte.parseByte(mTurningSeekBarValue.getText().toString()));
+                            }
+                        }, counter); // Wait before sending the message
+                        counter += 25;
+                        mHandler.postDelayed(new Runnable() {
+                            public void run() {
+                                BalancingRobotFullSizeActivity activity = (BalancingRobotFullSizeActivity) getActivity();
+                                if (activity != null)
+                                    activity.mChatService.mBluetoothProtocol.getTurning();
+                            }
+                        }, counter); // Wait before sending the message
+                        counter += 25;
+                    }
+
                     /*
                     if (counter != 0) {
                         mHandler.postDelayed(new Runnable() {
@@ -198,6 +234,9 @@ public class PIDFragment extends SherlockFragment {
 
         Button mTargetAngleUpArrow = (Button) v.findViewById(R.id.TargetAngleUpArrow);
         Button mTargetAngleDownArrow = (Button) v.findViewById(R.id.TargetAngleDownArrow);
+
+        Button mTurningUpArrow = (Button) v.findViewById(R.id.TurningUpArrow);
+        Button mTurningDownArrow = (Button) v.findViewById(R.id.TurningDownArrow);
 
         mKpUpArrow.setOnClickListener(new OnClickListener() {
             @Override
@@ -251,6 +290,19 @@ public class PIDFragment extends SherlockFragment {
             }
         });
 
+        mTurningUpArrow.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTurningSeekBar.setProgress(mTurningSeekBar.getProgress() + 1); // Increase with 1
+            }
+        });
+        mTurningDownArrow.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTurningSeekBar.setProgress(mTurningSeekBar.getProgress() - 1); // Decrease with 1
+            }
+        });
+
         updateButton();
         return v;
     }
@@ -274,6 +326,13 @@ public class PIDFragment extends SherlockFragment {
         if (mTargetAngleView != null && mTargetAngleSeekBar != null && !targetAngleValue.isEmpty()) {
             mTargetAngleView.setText(targetAngleValue);
             mTargetAngleSeekBar.setProgress((int) ((Float.parseFloat(targetAngleValue) + 30) * 100.0f));
+        }
+    }
+
+    public void updateTurning(int turningScale) {
+        if (mTurningView != null && mTurningSeekBar != null) {
+            mTurningView.setText(Integer.toString(turningScale));
+            mTurningSeekBar.setProgress(turningScale);
         }
     }
 

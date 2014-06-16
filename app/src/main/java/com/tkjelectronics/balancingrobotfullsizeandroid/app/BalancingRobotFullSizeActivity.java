@@ -63,7 +63,7 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
     public static final String KI_VALUE = "ki_value";
     public static final String KD_VALUE = "kd_value";
     public static final String TARGET_ANGLE = "target_angle";
-    public static final String TURNING_SCALE = "target_angle";
+    public static final String TURNING_SCALE = "turning_scale";
 
     // Intent request codes
     private static final int REQUEST_CONNECT_DEVICE = 1;
@@ -375,6 +375,8 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
                             pidFragment.updatePID(data.getString(KP_VALUE), data.getString(KI_VALUE), data.getString(KD_VALUE));
                         else if (data.containsKey(TARGET_ANGLE))
                             pidFragment.updateAngle(data.getString(TARGET_ANGLE));
+                        else if (data.containsKey(TURNING_SCALE))
+                            pidFragment.updateTurning(data.getInt(TURNING_SCALE));
                     }
                     /*
                     if (newInfo || newStatus) {
