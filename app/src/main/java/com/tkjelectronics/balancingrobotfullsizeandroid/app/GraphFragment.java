@@ -40,13 +40,14 @@ import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 import com.jjoe64.graphview.GraphViewStyle;
 import com.jjoe64.graphview.LineGraphView;
 
+// TODO: Remove static
 public class GraphFragment extends SherlockFragment {
     private static final String TAG = "GraphFragment";
     private static final boolean D = BalancingRobotFullSizeActivity.D;
 
     private static LineGraphView graphView;
     private static GraphViewSeries accSeries, gyroSeries, kalmanSeries;
-    private static double counter = 100d;
+    private static double counter = 100.0;
 
     private static CheckBox mCheckBox1, mCheckBox2, mCheckBox3;
     private static EditText mQangle, mQbias, mRmeasure;
@@ -57,7 +58,7 @@ public class GraphFragment extends SherlockFragment {
     public GraphFragment() {
         for (int i = 0; i < 3; i++)
             for (int i2 = 0; i2 < buffer[i].length; i2++)
-                buffer[i][i2] = 180d;
+                buffer[i][i2] = 0.0;
     }
 
     @Override
@@ -98,7 +99,7 @@ public class GraphFragment extends SherlockFragment {
         } else
             graphView.addSeries(kalmanSeries);
 
-        graphView.setManualYAxisBounds(360, 0);
+        graphView.setManualYAxisBounds(180, -180);
         graphView.setViewPort(0, 100);
         graphView.setScrollable(true);
         graphView.setDisableTouch(true);
@@ -229,8 +230,7 @@ public class GraphFragment extends SherlockFragment {
 
         counter++;
         accSeries.appendData(new GraphViewData(counter, buffer[0][100]), scroll, 101);
-        if (buffer[1][100] <= 360 && buffer[1][100] >= 0) // Don't draw it if it would be larger than y-axis boundaries
-            gyroSeries.appendData(new GraphViewData(counter, buffer[1][100]), scroll, 101);
+        gyroSeries.appendData(new GraphViewData(counter, buffer[1][100]), scroll, 101);
         kalmanSeries.appendData(new GraphViewData(counter, buffer[2][100]), scroll, 101);
 
         if (!scroll)

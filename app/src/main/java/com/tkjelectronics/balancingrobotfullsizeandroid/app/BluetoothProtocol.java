@@ -64,31 +64,6 @@ public class BluetoothProtocol {
         mChatService.write(output);
         mChatService.write(getChecksum(output));
     }
-/*
-    // TODO: Only send the values that has actually changed
-    void setAllValues() {
-        setPID(); // Set PID values
-        delay(10);
-        setTarget(); // Set target angle
-        delay(10);
-        setTurning(); // Set turning scale value
-        delay(10);
-        setKalman(); // Set Kalman values
-        delay(10);
-    }
-
-    // TODO: Only get the values that has actually changed
-    void getAllValues() {
-        getPID(); // Get PID values
-        delay(10);
-        getTarget(); // Get target angle
-        delay(10);
-        getTurning(); // Get turning scale value
-        delay(10);
-        getKalman(); // Get Kalman values
-        delay(10);
-    }
-*/
 
     /**
      * Set PID values. All floats/doubles are multiplied by 100.0 before sending.
@@ -338,10 +313,10 @@ public class BluetoothProtocol {
                         break;
                     case START_INFO:
                         int speed = input[0] | (input[1] << 8);
-                        int current = input[2] | (input[3] << 8);
-                        int turning = input[4] | (input[5] << 8);
-                        int battery = input[6];
-                        long runTime = input[7] | (input[8] << 8) | ((long)input[9] << 16) | ((long)input[10] << 24);
+                        int current = input[2] | ((byte) input[3] << 8); // This can be negative as well
+                        int turning = input[4] | ((byte) input[5] << 8); // This can be negative as well
+                        int battery = input[6] | (input[7] << 8);
+                        long runTime = input[8] | (input[9] << 8) | ((long)input[10] << 16) | ((long)input[11] << 24);
 
                         message = mHandler.obtainMessage(BalancingRobotFullSizeActivity.MESSAGE_READ); // Send message back to the UI Activity
                         bundle = new Bundle();
@@ -358,9 +333,9 @@ public class BluetoothProtocol {
                             Log.v(TAG, "Speed: " + speed + " Current: " + current + " Turning: " + turning + " Battery: " + battery + " Run time: " + runTime);
                         break;
                     case START_IMU:
-                        int acc = input[0] | (input[1] << 8);
-                        int gyro = input[2] | (input[3] << 8);
-                        int kalman = input[4] | (input[5] << 8);
+                        int acc = input[0] | ((byte) input[1] << 8); // This can be negative as well
+                        int gyro = input[2] | ((byte) input[3] << 8); // This can be negative as well
+                        int kalman = input[4] | ((byte) input[5] << 8); // This can be negative as well
 
                         message = mHandler.obtainMessage(BalancingRobotFullSizeActivity.MESSAGE_READ); // Send message back to the UI Activity
                         bundle = new Bundle();

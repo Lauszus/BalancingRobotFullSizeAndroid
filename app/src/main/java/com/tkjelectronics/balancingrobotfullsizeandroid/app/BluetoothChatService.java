@@ -395,7 +395,6 @@ public class BluetoothChatService {
             // Keep listening to the InputStream while connected
             while (!stopReading) {
                 try {
-                    // TODO: Clean this up
                     if (mmInStream.available() > 0) { // Check if new data is available
                         int bytes = offset;
                         while (!(new String(buffer).contains(BluetoothProtocol.responseEnd)))
@@ -432,7 +431,7 @@ public class BluetoothChatService {
                                 }
                                 break;
                             } else
-                                mBluetoothProtocol.parseData(buffer, start, end - start);
+                                mBluetoothProtocol.parseData(buffer, start, end - start + BluetoothProtocol.responseEnd.length());
                         }
 
 /*
