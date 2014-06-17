@@ -59,7 +59,7 @@ public class InfoFragment extends SherlockFragment {
         // Configure value range and ticks
         mSpeed.setMaxSpeed(100);
         mSpeed.setMajorTickStep(10);
-        mSpeed.setMinorTicks(2);
+        mSpeed.setMinorTicks(1);
 
         // Configure value range colors
         mSpeed.addColoredRange(10, 50, Color.GREEN);
@@ -69,8 +69,8 @@ public class InfoFragment extends SherlockFragment {
         return v;
     }
 
-    // TODO: Implement this properly
     public void updateView(int speed, int current, int turning, int batteryLevel, long runTime) {
+        // TODO: Implement this properly
         /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) // Animation is only supported on API level >= 11
             mSpeed.setSpeed((float)speed / 100.0f + 0.001, 500, 50);
         else*/
