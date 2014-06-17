@@ -271,15 +271,21 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
         // When the given tab is selected, switch to the corresponding page in the ViewPager.
         mUnderlinePageIndicator.setCurrentItem(currentTabSelected);
 
-        if (checkTab(ViewPagerAdapter.INFO_FRAGMENT) && mChatService != null && mChatService.getState() == BluetoothChatService.STATE_CONNECTED)
-            mChatService.mBluetoothProtocol.startInfo();
-        else if (checkTab(ViewPagerAdapter.GRAPH_FRAGMENT) && mChatService != null && mChatService.getState() == BluetoothChatService.STATE_CONNECTED) {
-            mChatService.mBluetoothProtocol.getKalman();
-            if (GraphFragment.mToggleButton != null) {
-                if (GraphFragment.mToggleButton.isChecked())
-                    mChatService.mBluetoothProtocol.startImu(); // Request data
-                else
-                    mChatService.mBluetoothProtocol.stopImu(); // Stop sending data
+        if (mChatService != null && mChatService.getState() == BluetoothChatService.STATE_CONNECTED) {
+            if (checkTab(ViewPagerAdapter.INFO_FRAGMENT))
+                mChatService.mBluetoothProtocol.startInfo();
+            else if (checkTab(ViewPagerAdapter.PID_FRAGMENT)) {
+                mChatService.mBluetoothProtocol.getPID();
+                mChatService.mBluetoothProtocol.getTarget();
+                mChatService.mBluetoothProtocol.getTurning();
+            } else if (checkTab(ViewPagerAdapter.GRAPH_FRAGMENT)) {
+                mChatService.mBluetoothProtocol.getKalman();
+                if (GraphFragment.mToggleButton != null) {
+                    if (GraphFragment.mToggleButton.isChecked())
+                        mChatService.mBluetoothProtocol.startImu(); // Request data
+                    else
+                        mChatService.mBluetoothProtocol.stopImu(); // Stop sending data
+                }
             }
         }
 
@@ -294,11 +300,13 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
         if (D)
             Log.d(TAG, "onTabUnselected: " + tab.getPosition() + " " + currentTabSelected);
 
-        if (checkTab(ViewPagerAdapter.INFO_FRAGMENT) && mChatService != null && mChatService.getState() == BluetoothChatService.STATE_CONNECTED)
-            mChatService.mBluetoothProtocol.stopInfo();
-        else if (checkTab(ViewPagerAdapter.GRAPH_FRAGMENT) && mChatService != null && mChatService.getState() == BluetoothChatService.STATE_CONNECTED) {
-            mChatService.mBluetoothProtocol.stopImu(); // Stop sending data
+        if (mChatService != null && mChatService.getState() == BluetoothChatService.STATE_CONNECTED) {
+            if (checkTab(ViewPagerAdapter.INFO_FRAGMENT))
+                mChatService.mBluetoothProtocol.stopInfo(); // Stop sending info
+            else if (checkTab(ViewPagerAdapter.GRAPH_FRAGMENT))
+                mChatService.mBluetoothProtocol.stopImu(); // Stop sending data
         }
+
         if (checkTab(ViewPagerAdapter.GRAPH_FRAGMENT)) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE); // Hide the keyboard
             imm.hideSoftInputFromWindow(getWindow().getDecorView().getApplicationWindowToken(), 0);
