@@ -78,12 +78,13 @@ public class InfoFragment extends SherlockFragment {
 
         if (mCurrentDraw != null)
             mCurrentDraw.setText(Integer.toString(current) + 'A');
+            mCurrentDraw.setText(String.format("%.2f", (float)current / 100.0f) + 'A');
 
         if (mTurning != null)
-            mTurning.setText(Integer.toString(turning));
+            mTurning.setText(String.format("%.2f", (float)turning / 100.0f));
 
         if (mBatteryLevel != null)
-            mBatteryLevel.setText(Integer.toString(batteryLevel) + 'V');
+            mBatteryLevel.setText(String.format("%.2f", (float)batteryLevel / 100.0f) + 'V');
 
         if (mRunTime != null) { // The run time is is ms
             float runTimeFloat = (float)runTime / 60000.0f;
