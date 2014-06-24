@@ -8,4 +8,8 @@ This is the source code for the Android app I use for my full size balancing rob
 
 The code is still in progress. I will update this readme with more information later on.
 
+# Screenshots
+
+![Screenshots](app_screenshots.png)
+
 For more information send me an email at <kristianl@tkjelectronics.dk>.
