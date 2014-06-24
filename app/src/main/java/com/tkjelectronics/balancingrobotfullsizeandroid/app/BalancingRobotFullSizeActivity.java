@@ -255,9 +255,9 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
                 Intent serverIntent = new Intent(this, DeviceListActivity.class);
                 startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
                 return true;
-            case R.id.action_settings:
-                // TODO: Open up the settings dialog
-                //return true;
+            /*case R.id.action_settings:
+                // TODO: Make settings dialog
+                return true;*/
         }
         return super.onOptionsItemSelected(item);
     }

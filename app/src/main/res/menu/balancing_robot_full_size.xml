@@ -8,10 +8,11 @@
         android:icon="@drawable/device_access_bluetooth"
         android:title="@string/action_connect"
         android:showAsAction="ifRoom|withText" />
-    <item
-        android:id="@+id/action_settings"
-        android:icon="@drawable/ic_menu_preferences"
-        android:title="@string/action_settings"
-        android:showAsAction="ifRoom|withText" />
+
+    <!--<item-->
+        <!--android:id="@+id/action_settings"-->
+        <!--android:icon="@drawable/ic_menu_preferences"-->
+        <!--android:title="@string/action_settings"-->
+        <!--android:showAsAction="ifRoom|withText" />-->
 
 </menu>
