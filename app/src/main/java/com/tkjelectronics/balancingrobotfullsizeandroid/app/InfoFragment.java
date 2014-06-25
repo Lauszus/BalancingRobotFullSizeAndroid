@@ -77,7 +77,6 @@ public class InfoFragment extends SherlockFragment {
             mSpeed.setSpeed((float)speed / 100.0f);
 
         if (mCurrentDraw != null)
-            mCurrentDraw.setText(Integer.toString(current) + 'A');
             mCurrentDraw.setText(String.format("%.2f", (float)current / 100.0f) + 'A');
 
         if (mTurning != null)
