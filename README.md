@@ -6,7 +6,7 @@ _________
 
 This is the source code for the Android app I use for my full size balancing robot: <https://github.com/Lauszus/BalancingRobotFullSize>.
 
-The code is still in progress. I will update this readme with more information later on.
+Detailed information can be found at the blog post: <http://blog.tkjelectronics.dk/2014/07/full-size-diy-balancing-robot/>.
 
 # Screenshots
 
