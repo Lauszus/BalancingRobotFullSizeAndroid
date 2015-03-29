@@ -24,7 +24,9 @@ android {
 }
 
 repositories {
-    maven { url 'libs' }
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 dependencies {
@@ -34,7 +36,7 @@ dependencies {
     compile 'com.jjoe64:graphview:3.1.4'
     compile 'fr.baloomba:viewpagerindicator:2.4.2'
     // TODO: Use Maven repo instead
-    compile 'com.cardiomood.android.speedometer:speedometer:1.0.1'
+    compile(name: 'SpeedometerView-1.0.1', ext: 'aar')
 }
 
 // These values are all set in my global gradle.properties file
