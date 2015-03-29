@@ -32,8 +32,9 @@ dependencies {
     compile 'com.android.support:support-v4:19.1.+'
     compile 'com.google.android.gms:play-services:4.4.+'
     compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
+    compile 'com.jjoe64:graphview:3.1.4'
+    // TODO: Use Maven repo instead
     compile 'com.viewpagerindicator:viewpagerindicator:2.4.1'
-    compile 'com.jjoe64.graphview:graphview:3.1.1'
     compile 'com.cardiomood.android.speedometer:speedometer:1.0.1'
 }
 

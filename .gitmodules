@@ -1,6 +1,3 @@
 [submodule "app/libs/Android-ViewPagerIndicator"]
 	path = app/libs/Android-ViewPagerIndicator
 	url = https://github.com/Lauszus/Android-ViewPagerIndicator.git
-[submodule "app/libs/GraphView"]
-	path = app/libs/GraphView
-	url = https://github.com/Lauszus/GraphView.git
