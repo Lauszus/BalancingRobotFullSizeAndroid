@@ -152,13 +152,13 @@ public class PIDFragment extends SherlockFragment {
                             }
                         }); // Wait before sending the message
                         counter += 25;
-                        mHandler.post(new Runnable() {
+                        mHandler.postDelayed(new Runnable() {
                             public void run() {
                                 BalancingRobotFullSizeActivity activity = (BalancingRobotFullSizeActivity) getActivity();
                                 if (activity != null)
                                     activity.mChatService.mBluetoothProtocol.getPID();
                             }
-                        }); // Wait before sending the message
+                        }, counter); // Wait before sending the message
                         counter += 25;
                     }
 
