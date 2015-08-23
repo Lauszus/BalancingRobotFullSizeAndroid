@@ -1,5 +1,5 @@
 # Balancing robot full size Android app
-#### Developed by Kristian Lauszus, 2014
+#### Developed by Kristian Sloth Lauszus, 2014
 
 The code is released under the GNU General Public License.
 _________
@@ -12,4 +12,4 @@ Detailed information can be found at the blog post: <http://blog.tkjelectronics.
 
 ![Screenshots](app_screenshots.png)
 
-For more information send me an email at <kristianl@tkjelectronics.dk>.
+For more information send me an email at <lauszus@gmail.com>.
