@@ -33,6 +33,8 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
+import java.util.Locale;
+
 public class PIDFragment extends SherlockFragment {
     private static final String TAG = "PIDFragment";
     private static final boolean D = BalancingRobotFullSizeActivity.D;
@@ -63,7 +65,7 @@ public class PIDFragment extends SherlockFragment {
         final TextView mKpSeekBarValue = (TextView) v.findViewById(R.id.KpValue);
         mKpSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {
-                mKpSeekBarValue.setText(String.format("%.2f", (float)progress / 100.0f)); // SeekBar can only handle integers, so format it to a float with two decimal places
+                mKpSeekBarValue.setText(String.format(Locale.US, "%.2f", (float)progress / 100.0f)); // SeekBar can only handle integers, so format it to a float with two decimal places
             }
             public void onStartTrackingTouch(SeekBar seekBar) {
             }
@@ -77,7 +79,7 @@ public class PIDFragment extends SherlockFragment {
         final TextView mKiSeekBarValue = (TextView) v.findViewById(R.id.KiValue);
         mKiSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {
-                mKiSeekBarValue.setText(String.format("%.2f", (float)progress / 100.0f)); // SeekBar can only handle integers, so format it to a float with two decimal places
+                mKiSeekBarValue.setText(String.format(Locale.US, "%.2f", (float)progress / 100.0f)); // SeekBar can only handle integers, so format it to a float with two decimal places
             }
             public void onStartTrackingTouch(SeekBar seekBar) {
             }
@@ -92,7 +94,7 @@ public class PIDFragment extends SherlockFragment {
         final TextView mKdSeekBarValue = (TextView) v.findViewById(R.id.KdValue);
         mKdSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {
-                mKdSeekBarValue.setText(String.format("%.2f", (float)progress / 100.0f)); // SeekBar can only handle integers, so format it to a float with two decimal places
+                mKdSeekBarValue.setText(String.format(Locale.US, "%.2f", (float)progress / 100.0f)); // SeekBar can only handle integers, so format it to a float with two decimal places
             }
             public void onStartTrackingTouch(SeekBar seekBar) {
             }
@@ -106,7 +108,7 @@ public class PIDFragment extends SherlockFragment {
         final TextView mTargetAngleSeekBarValue = (TextView) v.findViewById(R.id.TargetAngleValue);
         mTargetAngleSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {
-                mTargetAngleSeekBarValue.setText(String.format("%.2f", (float)progress / 100.0f - 30.0f)); // It's not possible to set the minimum value either, so we will add a offset
+                mTargetAngleSeekBarValue.setText(String.format(Locale.US, "%.2f", (float)progress / 100.0f - 30.0f)); // It's not possible to set the minimum value either, so we will add a offset
             }
             public void onStartTrackingTouch(SeekBar seekBar) {
             }
@@ -120,7 +122,7 @@ public class PIDFragment extends SherlockFragment {
         final TextView mTurningSeekBarValue = (TextView) v.findViewById(R.id.TurningValue);
         mTurningSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {
-                mTurningSeekBarValue.setText(Integer.toString(progress)); // Set it directly
+                mTurningSeekBarValue.setText(String.format(Locale.US, "%d", progress)); // Set it directly
             }
             public void onStartTrackingTouch(SeekBar seekBar) {
             }
@@ -319,7 +321,7 @@ public class PIDFragment extends SherlockFragment {
 
     public void updateTurning(int turningScale) {
         if (mTurningView != null && mTurningSeekBar != null) {
-            mTurningView.setText(Integer.toString(turningScale));
+            mTurningView.setText(String.format(Locale.US, "%d", turningScale));
             mTurningSeekBar.setProgress(turningScale);
         }
     }

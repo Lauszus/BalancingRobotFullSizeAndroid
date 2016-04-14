@@ -29,6 +29,8 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.cardiomood.android.speedometer.SpeedometerView;
 
+import java.util.Locale;
+
 public class InfoFragment extends SherlockFragment {
     private SpeedometerView mSpeed;
 
@@ -76,20 +78,25 @@ public class InfoFragment extends SherlockFragment {
         else*/
             mSpeed.setSpeed((float)speed / 100.0f);
 
-        if (mCurrentDraw != null)
-            mCurrentDraw.setText(String.format("%.2f", (float)current / 100.0f) + 'A');
+        if (mCurrentDraw != null) {
+            String str = String.format(Locale.US, "%.2f", (float) current / 100.0f) + 'A';
+            mCurrentDraw.setText(str);
+        }
 
         if (mTurning != null)
-            mTurning.setText(String.format("%.2f", (float)turning / 100.0f));
+            mTurning.setText(String.format(Locale.US, "%.2f", (float)turning / 100.0f));
 
-        if (mBatteryLevel != null)
-            mBatteryLevel.setText(String.format("%.2f", (float)batteryLevel / 100.0f) + 'V');
+        if (mBatteryLevel != null) {
+            String str = String.format(Locale.US, "%.2f", (float)batteryLevel / 100.0f) + 'V';
+            mBatteryLevel.setText(str);
+        }
 
         if (mRunTime != null) { // The run time is is ms
             float runTimeFloat = (float)runTime / 60000.0f;
-            String minutes = Integer.toString((int) Math.floor(runTimeFloat));
-            String seconds = Integer.toString((int) (runTimeFloat % 1 / (1.0f / 60.0f)));
-            mRunTime.setText(minutes + " min " + seconds + " sec");
+            String minutes = String.format(Locale.US, "%d", (int) Math.floor(runTimeFloat));
+            String seconds = String.format(Locale.US, "%d", (int) (runTimeFloat % 1 / (1.0f / 60.0f)));
+            String str = minutes + " min " + seconds + " sec";
+            mRunTime.setText(str);
         }
     }
 

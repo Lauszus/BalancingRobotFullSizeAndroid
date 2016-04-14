@@ -25,6 +25,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import java.util.Locale;
+
 public class BluetoothProtocol {
     // Debugging
     private static final String TAG = "BluetoothProtocol";
@@ -199,7 +201,7 @@ public class BluetoothProtocol {
         };
         sendCommand(output); // Send output
     }
-
+/*
     private byte[] concat(byte[] A, byte[] B) { // Source: http://stackoverflow.com/a/80503/2175837
         int aLen = A.length;
         int bLen = B.length;
@@ -208,8 +210,7 @@ public class BluetoothProtocol {
         System.arraycopy(B, 0, C, aLen, bLen);
         return C;
     }
-
-
+*/
     private byte[] buffer = new byte[1024];
 
     public void parseData(byte msg[], int offset, int length) {
@@ -260,9 +261,9 @@ public class BluetoothProtocol {
                         int Kd = input[4] | (input[5] << 8);
 
                         // TODO: Just store this as an int
-                        bundle.putString(BalancingRobotFullSizeActivity.KP_VALUE, String.format("%.2f", (float)Kp / 100.0f));
-                        bundle.putString(BalancingRobotFullSizeActivity.KI_VALUE, String.format("%.2f", (float)Ki / 100.0f));
-                        bundle.putString(BalancingRobotFullSizeActivity.KD_VALUE, String.format("%.2f", (float)Kd / 100.0f));
+                        bundle.putString(BalancingRobotFullSizeActivity.KP_VALUE, String.format(Locale.US, "%.2f", (float)Kp / 100.0f));
+                        bundle.putString(BalancingRobotFullSizeActivity.KI_VALUE, String.format(Locale.US, "%.2f", (float)Ki / 100.0f));
+                        bundle.putString(BalancingRobotFullSizeActivity.KD_VALUE, String.format(Locale.US, "%.2f", (float)Kd / 100.0f));
 
                         message.setData(bundle);
                         mHandler.sendMessage(message);
@@ -274,7 +275,7 @@ public class BluetoothProtocol {
                         int target = input[0] | ((byte) input[1] << 8); // This can be negative as well
 
                         // TODO: Just store this as an int
-                        bundle.putString(BalancingRobotFullSizeActivity.TARGET_ANGLE, String.format("%.2f", (float)target / 100.0f));
+                        bundle.putString(BalancingRobotFullSizeActivity.TARGET_ANGLE, String.format(Locale.US, "%.2f", (float)target / 100.0f));
 
                         message.setData(bundle);
                         mHandler.sendMessage(message);
@@ -297,9 +298,9 @@ public class BluetoothProtocol {
                         int Qbias = input[2] | (input[3] << 8);
                         int Rmeasure = input[4] | (input[5] << 8);
 
-                        bundle.putString(BalancingRobotFullSizeActivity.QANGLE_VALUE, String.format("%.4f", (float)Qangle / 10000.0f));
-                        bundle.putString(BalancingRobotFullSizeActivity.QBIAS_VALUE, String.format("%.4f", (float)Qbias / 10000.0f));
-                        bundle.putString(BalancingRobotFullSizeActivity.RMEASURE_VALUE, String.format("%.4f", (float)Rmeasure / 10000.0f));
+                        bundle.putString(BalancingRobotFullSizeActivity.QANGLE_VALUE, String.format(Locale.US, "%.4f", (float)Qangle / 10000.0f));
+                        bundle.putString(BalancingRobotFullSizeActivity.QBIAS_VALUE, String.format(Locale.US, "%.4f", (float)Qbias / 10000.0f));
+                        bundle.putString(BalancingRobotFullSizeActivity.RMEASURE_VALUE, String.format(Locale.US, "%.4f", (float)Rmeasure / 10000.0f));
 
                         message.setData(bundle);
                         mHandler.sendMessage(message);
@@ -331,9 +332,9 @@ public class BluetoothProtocol {
                         int gyro = input[2] | ((byte) input[3] << 8); // This can be negative as well
                         int kalman = input[4] | ((byte) input[5] << 8); // This can be negative as well
 
-                        bundle.putString(BalancingRobotFullSizeActivity.ACC_ANGLE, String.format("%.2f", (float)acc / 100.0f));
-                        bundle.putString(BalancingRobotFullSizeActivity.GYRO_ANGLE, String.format("%.2f", (float)gyro / 100.0f));
-                        bundle.putString(BalancingRobotFullSizeActivity.KALMAN_ANGLE, String.format("%.2f", (float)kalman / 100.0f));
+                        bundle.putString(BalancingRobotFullSizeActivity.ACC_ANGLE, String.format(Locale.US, "%.2f", (float)acc / 100.0f));
+                        bundle.putString(BalancingRobotFullSizeActivity.GYRO_ANGLE, String.format(Locale.US, "%.2f", (float)gyro / 100.0f));
+                        bundle.putString(BalancingRobotFullSizeActivity.KALMAN_ANGLE, String.format(Locale.US, "%.2f", (float)kalman / 100.0f));
 
                         message.setData(bundle);
                         mHandler.sendMessage(message);
