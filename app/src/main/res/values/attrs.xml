@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <declare-styleable name = "SeekBarArrows" >
+        <attr name="text" format="string"/>
+        <attr name="max" format="float"/>
+        <attr name="n_values" format="integer"/>
+    </declare-styleable>
+
     <!-- Declare custom theme attributes that allow changing which styles are
          used for button bars depending on the API level.
          ?android:attr/buttonBarStyle is new as of API 11 so this is
