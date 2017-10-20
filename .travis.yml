@@ -1,0 +1,36 @@
+language: android
+
+sudo: false
+
+jdk:
+  - oraclejdk8
+
+before_cache:
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
+android:
+  components:
+    # Use the latest revision of Android SDK Tools
+    - platform-tools
+    - tools
+
+    # The BuildTools version used by your project
+    - build-tools-25.0.3
+
+    # The SDK version used to compile your project
+    - android-25
+
+    # Additional components
+    - extra-android-m2repository
+
+before_script:
+    # Add key used for Google Maps, so Travis does not fail
+    - echo '<resources><string name="MapsKey">PRIVATE</string></resources>' > $TRAVIS_BUILD_DIR/app/src/main/res/values/key.xml
+
+script:
+  ./gradlew build

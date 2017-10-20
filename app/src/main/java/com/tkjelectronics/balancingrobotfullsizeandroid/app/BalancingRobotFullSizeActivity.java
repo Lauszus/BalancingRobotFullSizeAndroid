@@ -20,7 +20,6 @@
 package com.tkjelectronics.balancingrobotfullsizeandroid.app;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
@@ -30,23 +29,21 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.FragmentTransaction;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.viewpagerindicator.UnderlinePageIndicator;
-
 import java.lang.ref.WeakReference;
 
-public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity implements ActionBar.TabListener {
+public class BalancingRobotFullSizeActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
     private static final String TAG = "BalancingRobotFullSizeActivity";
     public static final boolean D = BuildConfig.DEBUG; // This is automatically set when building
 
@@ -97,23 +94,27 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
 
     private Toast mToast;
 
-    /** The {@link UnderlinePageIndicator} that will host the section contents. */
-    UnderlinePageIndicator mUnderlinePageIndicator;
-
     public int currentTabSelected;
 
     ViewPager mViewPager;
     ViewPagerAdapter mViewPagerAdapter;
+
+    /**
+     * Used to check if the app is running on an emulator or not.
+     * See: http://stackoverflow.com/a/5864867.
+     * @return True if the app is running on an emulator.
+     */
+    public static boolean isEmulator() {
+        if (D)
+            Log.d(TAG, "Brand: " + Build.BRAND);
+        return Build.BRAND.startsWith("generic") || Build.BRAND.equalsIgnoreCase("android");
+    }
 
     @Override
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_balancing_robot_full_size);
-
-        // Set up the action bar.
-        final ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         // Get local Bluetooth adapter
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -122,11 +123,14 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
             mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         // If the adapter is null, then Bluetooth is not supported
-        if (mBluetoothAdapter == null) {
+        if (mBluetoothAdapter == null && !isEmulator()) {
             showToast("Bluetooth is not available", Toast.LENGTH_LONG);
             finish();
             return;
         }
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         // Create the adapter that will return a fragment for each of the primary sections of the app.
         mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
@@ -135,35 +139,13 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mViewPagerAdapter);
 
-        // Bind the underline indicator to the adapter
-        mUnderlinePageIndicator = (UnderlinePageIndicator) findViewById(R.id.indicator);
-        mUnderlinePageIndicator.setViewPager(mViewPager);
-        mUnderlinePageIndicator.setFades(false);
+        TabLayout mTabLayout = (TabLayout) findViewById(R.id.tabs);
+        mTabLayout.setupWithViewPager(mViewPager);
+        mTabLayout.addOnTabSelectedListener(this);
+        mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        mTabLayout.setTabMode(TabLayout.MODE_FIXED);
 
-        // When swiping between different sections, select the corresponding
-        // tab. We can also use ActionBar.Tab#select() to do this if we have
-        // a reference to the Tab.
-        mUnderlinePageIndicator.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                if (D)
-                    Log.d(TAG, "ViewPager position: " + position);
-                actionBar.setSelectedNavigationItem(position);
-            }
-        });
-
-        // For each of the sections in the app, add a tab to the action bar.
-        for (int i = 0; i < mViewPagerAdapter.getCount(); i++) {
-            // Create a tab with text corresponding to the page title defined by
-            // the adapter. Also specify this Activity object, which implements
-            // the TabListener interface, as the callback (listener) for when
-            // this tab is selected.
-            actionBar.addTab(actionBar.newTab()
-                            .setText(mViewPagerAdapter.getPageTitle(i))
-                            .setTabListener(this));
-        }
-
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON); // Keep the screen on while the user is riding the robot
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON); // Keep the screen on
     }
 
     public void showToast(String message, int duration) {
@@ -182,7 +164,7 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
             Log.d(TAG, "++ ON START ++");
         // If BT is not on, request that it be enabled.
         // setupChat() will then be called during onActivityResult
-        if (!mBluetoothAdapter.isEnabled()) {
+        if (!isEmulator() && !mBluetoothAdapter.isEnabled()) {
             if (D)
                 Log.d(TAG, "Request enable BT");
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -240,7 +222,7 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getSupportMenuInflater().inflate(R.menu.balancing_robot_full_size, menu);
+        getMenuInflater().inflate(R.menu.balancing_robot_full_size, menu);
         return true;
     }
 
@@ -263,13 +245,13 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
     }
 
     @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+    public void onTabSelected(TabLayout.Tab tab) {
         if (D)
             Log.d(TAG, "onTabSelected: " + tab.getPosition());
 
         currentTabSelected = tab.getPosition();
         // When the given tab is selected, switch to the corresponding page in the ViewPager.
-        mUnderlinePageIndicator.setCurrentItem(currentTabSelected);
+        mViewPager.setCurrentItem(currentTabSelected);
 
         if (mChatService != null && mChatService.getState() == BluetoothChatService.STATE_CONNECTED) {
             if (checkTab(ViewPagerAdapter.INFO_FRAGMENT))
@@ -296,7 +278,7 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
     }
 
     @Override
-    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+    public void onTabUnselected(TabLayout.Tab tab) {
         if (D)
             Log.d(TAG, "onTabUnselected: " + tab.getPosition() + " " + currentTabSelected);
 
@@ -314,7 +296,7 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
     }
 
     @Override
-    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+    public void onTabReselected(TabLayout.Tab tab) {
     }
 
     public boolean checkTab(int tab) {
@@ -327,12 +309,12 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
         switch (requestCode) {
             case REQUEST_CONNECT_DEVICE:
                 // When DeviceListActivity returns with a device to connect to
-                if (resultCode == Activity.RESULT_OK)
+                if (resultCode == AppCompatActivity.RESULT_OK)
                     connectDevice(data, false);
                 break;
             case REQUEST_ENABLE_BT:
                 // When the request to enable Bluetooth returns
-                if (resultCode == Activity.RESULT_OK)
+                if (resultCode == AppCompatActivity.RESULT_OK)
                     setupBTService(); // Bluetooth is now enabled, so set up a chat session
                 else {
                     // User did not enable Bluetooth or an error occurred
@@ -365,8 +347,8 @@ public class BalancingRobotFullSizeActivity extends SherlockFragmentActivity imp
         }
     }
 
-    public SherlockFragment getFragment(int item) {
-        return (SherlockFragment)mViewPagerAdapter.instantiateItem(mViewPager, item);
+    public Fragment getFragment(int item) {
+        return (Fragment)mViewPagerAdapter.instantiateItem(mViewPager, item);
     }
 
     // The Handler class that gets information back from the BluetoothChatService

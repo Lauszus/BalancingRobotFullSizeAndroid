@@ -150,16 +150,17 @@
                     android:textColor="#ff33b5e5" />
             </TableRow>
 
+            <!-- Kp -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin"
-                android:orientation="horizontal">
+                android:layout_marginTop="@dimen/arrow_text_margin"
+                android:orientation="horizontal" >
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin"
+                    android:layout_marginLeft="@dimen/arrow_text_margin"
                     android:layout_weight="0"
                     android:text="@string/Kp" />
 
@@ -173,17 +174,20 @@
             </LinearLayout>
 
             <RelativeLayout
-                android:layout_marginTop="5dp" >
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
 
                 <Button
                     android:id="@+id/KpDownArrow"
                     android:layout_width="@dimen/arrow_size"
                     android:layout_height="@dimen/arrow_size"
-                    android:background="@drawable/arrow_down"
+                    android:background="@drawable/arrow_left"
                     android:layout_alignParentLeft="true" />
 
                 <SeekBar
                     android:id="@+id/KpSeekBar"
+                    android:layout_centerVertical="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/KpDownArrow"
@@ -195,22 +199,23 @@
                     android:id="@+id/KpUpArrow"
                     android:layout_width="@dimen/arrow_size"
                     android:layout_height="@dimen/arrow_size"
-                    android:background="@drawable/arrow_up"
+                    android:background="@drawable/arrow_right"
                     android:layout_alignParentRight="true" />
 
             </RelativeLayout>
 
+            <!-- Ki -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin"
-                android:orientation="horizontal">
+                android:layout_marginTop="@dimen/arrow_text_margin"
+                android:orientation="horizontal" >
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin"
-                    android:layout_weight="0"
+                    android:layout_marginLeft="@dimen/arrow_text_margin"
+                    android:layout_weight="0" />
                     android:text="@string/Ki" />
 
                 <TextView
@@ -223,17 +228,20 @@
             </LinearLayout>
 
             <RelativeLayout
-                android:layout_marginTop="5dp" >
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
 
                 <Button
                     android:id="@+id/KiDownArrow"
                     android:layout_width="@dimen/arrow_size"
                     android:layout_height="@dimen/arrow_size"
-                    android:background="@drawable/arrow_down"
+                    android:background="@drawable/arrow_left"
                     android:layout_alignParentLeft="true" />
 
                 <SeekBar
                     android:id="@+id/KiSeekBar"
+                    android:layout_centerVertical="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/KiDownArrow"
@@ -245,21 +253,22 @@
                     android:id="@+id/KiUpArrow"
                     android:layout_width="@dimen/arrow_size"
                     android:layout_height="@dimen/arrow_size"
-                    android:background="@drawable/arrow_up"
+                    android:background="@drawable/arrow_right"
                     android:layout_alignParentRight="true" />
 
             </RelativeLayout>
 
+            <!-- Kd -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin"
-                android:orientation="horizontal">
+                android:layout_marginTop="@dimen/arrow_text_margin"
+                android:orientation="horizontal" >
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin"
+                    android:layout_marginLeft="@dimen/arrow_text_margin"
                     android:layout_weight="0"
                     android:text="@string/Kd" />
 
@@ -273,17 +282,20 @@
             </LinearLayout>
 
             <RelativeLayout
-                android:layout_marginTop="5dp" >
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
 
                 <Button
                     android:id="@+id/KdDownArrow"
                     android:layout_width="@dimen/arrow_size"
                     android:layout_height="@dimen/arrow_size"
-                    android:background="@drawable/arrow_down"
+                    android:background="@drawable/arrow_left"
                     android:layout_alignParentLeft="true" />
 
                 <SeekBar
                     android:id="@+id/KdSeekBar"
+                    android:layout_centerVertical="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/KdDownArrow"
@@ -295,21 +307,22 @@
                     android:id="@+id/KdUpArrow"
                     android:layout_width="@dimen/arrow_size"
                     android:layout_height="@dimen/arrow_size"
-                    android:background="@drawable/arrow_up"
+                    android:background="@drawable/arrow_right"
                     android:layout_alignParentRight="true" />
 
             </RelativeLayout>
 
+            <!-- Target Angle -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin"
-                android:orientation="horizontal">
+                android:layout_marginTop="@dimen/arrow_text_margin"
+                android:orientation="horizontal" >
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin"
+                    android:layout_marginLeft="@dimen/arrow_text_margin"
                     android:layout_weight="0"
                     android:text="@string/targetAngle" />
 
@@ -323,17 +336,20 @@
             </LinearLayout>
 
             <RelativeLayout
-                android:layout_marginTop="5dp" >
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
 
                 <Button
                     android:id="@+id/TargetAngleDownArrow"
                     android:layout_width="@dimen/arrow_size"
                     android:layout_height="@dimen/arrow_size"
-                    android:background="@drawable/arrow_down"
+                    android:background="@drawable/arrow_left"
                     android:layout_alignParentLeft="true" />
 
                 <SeekBar
                     android:id="@+id/TargetAngleSeekBar"
+                    android:layout_centerVertical="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/TargetAngleDownArrow"
@@ -345,21 +361,22 @@
                     android:id="@+id/TargetAngleUpArrow"
                     android:layout_width="@dimen/arrow_size"
                     android:layout_height="@dimen/arrow_size"
-                    android:background="@drawable/arrow_up"
+                    android:background="@drawable/arrow_right"
                     android:layout_alignParentRight="true" />
 
             </RelativeLayout>
 
+            <!-- Turning scale -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin"
-                android:orientation="horizontal">
+                android:layout_marginTop="@dimen/arrow_text_margin"
+                android:orientation="horizontal" >
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin"
+                    android:layout_marginLeft="@dimen/arrow_text_margin"
                     android:layout_weight="0"
                     android:text="@string/turningScale" />
 
@@ -373,17 +390,20 @@
             </LinearLayout>
 
             <RelativeLayout
-                android:layout_marginTop="5dp" >
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
 
                 <Button
                     android:id="@+id/TurningDownArrow"
                     android:layout_width="@dimen/arrow_size"
                     android:layout_height="@dimen/arrow_size"
-                    android:background="@drawable/arrow_down"
+                    android:background="@drawable/arrow_left"
                     android:layout_alignParentLeft="true" />
 
                 <SeekBar
                     android:id="@+id/TurningSeekBar"
+                    android:layout_centerVertical="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/TurningDownArrow"
@@ -395,7 +415,7 @@
                     android:id="@+id/TurningUpArrow"
                     android:layout_width="@dimen/arrow_size"
                     android:layout_height="@dimen/arrow_size"
-                    android:background="@drawable/arrow_up"
+                    android:background="@drawable/arrow_right"
                     android:layout_alignParentRight="true" />
 
             </RelativeLayout>
