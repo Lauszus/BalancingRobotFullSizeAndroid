@@ -22,6 +22,7 @@ package com.tkjelectronics.balancingrobotfullsizeandroid.app;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,11 +32,9 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
-
 import java.util.Locale;
 
-public class PIDFragment extends SherlockFragment {
+public class PIDFragment extends Fragment {
     private static final String TAG = "PIDFragment";
     private static final boolean D = BalancingRobotFullSizeActivity.D;
 

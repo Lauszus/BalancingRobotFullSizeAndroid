@@ -21,17 +21,17 @@ package com.tkjelectronics.balancingrobotfullsizeandroid.app;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.cardiomood.android.speedometer.SpeedometerView;
 
 import java.util.Locale;
 
-public class InfoFragment extends SherlockFragment {
+public class InfoFragment extends Fragment {
     private SpeedometerView mSpeed;
 
     TextView mCurrentDraw, mTurning, mBatteryLevel, mRunTime;

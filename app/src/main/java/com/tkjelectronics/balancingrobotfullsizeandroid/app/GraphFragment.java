@@ -21,6 +21,7 @@ package com.tkjelectronics.balancingrobotfullsizeandroid.app;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +33,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ToggleButton;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphView.LegendAlign;
 import com.jjoe64.graphview.GraphViewSeries;
@@ -41,7 +41,7 @@ import com.jjoe64.graphview.GraphViewStyle;
 import com.jjoe64.graphview.LineGraphView;
 
 // TODO: Remove static
-public class GraphFragment extends SherlockFragment {
+public class GraphFragment extends Fragment {
     private static final String TAG = "GraphFragment";
     private static final boolean D = BalancingRobotFullSizeActivity.D;
 
