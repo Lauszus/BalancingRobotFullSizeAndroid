@@ -3,6 +3,7 @@
 
 The code is released under the GNU General Public License.
 _________
+[![Build Status](https://travis-ci.org/Lauszus/BalancingRobotFullSizeAndroid.svg?branch=master)](https://travis-ci.org/Lauszus/BalancingRobotFullSizeAndroid)
 
 This is the source code for the Android app I use for my full size balancing robot: <https://github.com/Lauszus/BalancingRobotFullSize>.
 
