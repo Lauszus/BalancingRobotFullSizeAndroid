@@ -12,6 +12,8 @@ This is the source code for the Android app I use for my full size balancing rob
 
 Detailed information can be found at the blog post: <http://blog.tkjelectronics.dk/2014/07/full-size-diy-balancing-robot/>.
 
+<a href="https://www.youtube.com/watch?v=80EKp2fpPDo" target="_blank"><img src="http://img.youtube.com/vi/80EKp2fpPDo/0.jpg" width="400" height="300" border="10" /></a>
+
 # Screenshots
 
 <img src="app_screenshots.png" width=600/>
