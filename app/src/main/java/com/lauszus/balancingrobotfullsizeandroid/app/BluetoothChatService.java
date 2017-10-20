@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.tkjelectronics.balancingrobotfullsizeandroid.app;
+package com.lauszus.balancingrobotfullsizeandroid.app;
 
 
 import android.bluetooth.BluetoothAdapter;

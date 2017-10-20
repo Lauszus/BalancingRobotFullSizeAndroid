@@ -17,7 +17,7 @@
  *
  ************************************************************************************/
 
-package com.tkjelectronics.balancingrobotfullsizeandroid.app;
+package com.lauszus.balancingrobotfullsizeandroid.app;
 
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;

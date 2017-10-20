@@ -5,7 +5,7 @@ android {
     buildToolsVersion '25.0.3'
 
     defaultConfig {
-        applicationId "com.tkjelectronics.balancingrobotfullsizeandroid.app"
+        applicationId "com.lauszus.balancingrobotfullsizeandroid.app"
         minSdkVersion 14
         targetSdkVersion 25
         versionCode 1
