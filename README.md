@@ -1,4 +1,7 @@
 # Balancing robot full size Android app
+
+<a href="https://play.google.com/store/apps/details?id=com.lauszus.balancingrobotfullsizeandroid.app"><img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" alt="Google Play" width="200px"/></a>
+
 #### Developed by Kristian Sloth Lauszus, 2014
 
 The code is released under the GNU General Public License.
@@ -11,6 +14,6 @@ Detailed information can be found at the blog post: <http://blog.tkjelectronics.
 
 # Screenshots
 
-![Screenshots](app_screenshots.png)
+<img src="app_screenshots.png" width=600/>
 
 For more information send me an email at <lauszus@gmail.com>.
