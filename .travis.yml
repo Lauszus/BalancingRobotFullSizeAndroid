@@ -28,5 +28,9 @@ android:
     # Additional components
     - extra-android-m2repository
 
+before_script:
+    # Add key used for Google Maps, so Travis does not fail
+    - echo '<resources><string name="MapsKey">PRIVATE</string></resources>' > $TRAVIS_BUILD_DIR/app/src/main/res/values/key.xml
+
 script:
   ./gradlew build
