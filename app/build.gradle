@@ -5,11 +5,11 @@ android {
     buildToolsVersion '25.0.3'
 
     defaultConfig {
-        applicationId "com.lauszus.balancingrobotfullsizeandroid.app"
+        applicationId 'com.lauszus.balancingrobotfullsizeandroid.app'
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName '1.0.1'
     }
 
     signingConfigs {
