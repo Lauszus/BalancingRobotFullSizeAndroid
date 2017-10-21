@@ -44,7 +44,7 @@ import android.widget.Toast;
 import java.lang.ref.WeakReference;
 
 public class BalancingRobotFullSizeActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
-    private static final String TAG = "BalancingRobotFullSizeActivity";
+    private static final String TAG = "BalancingRobotFullSize";
     public static final boolean D = BuildConfig.DEBUG; // This is automatically set when building
 
     // Message types sent from the BluetoothChatService Handler
@@ -107,7 +107,7 @@ public class BalancingRobotFullSizeActivity extends AppCompatActivity implements
     public static boolean isEmulator() {
         if (D)
             Log.d(TAG, "Brand: " + Build.BRAND);
-        return Build.BRAND.startsWith("generic") || Build.BRAND.equalsIgnoreCase("android");
+        return Build.BRAND.startsWith("generic") || Build.BRAND.equalsIgnoreCase("android") || Build.BRAND.equalsIgnoreCase("google");
     }
 
     @Override
@@ -360,7 +360,7 @@ public class BalancingRobotFullSizeActivity extends AppCompatActivity implements
         private String mConnectedDeviceName; // Name of the connected device
 
         BluetoothHandler(BalancingRobotFullSizeActivity activity) {
-            mActivity  = new WeakReference<BalancingRobotFullSizeActivity>(activity);
+            mActivity  = new WeakReference<>(activity);
         }
 
         @Override
