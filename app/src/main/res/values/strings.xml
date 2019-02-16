@@ -46,4 +46,6 @@
     <string name="Rmeasure">R<small><small>measure</small></small></string>
     <string name="update">Update</string>
 
+    <!-- Map -->
+    <string name="MapsKey">Replace with your own</string>
 </resources>

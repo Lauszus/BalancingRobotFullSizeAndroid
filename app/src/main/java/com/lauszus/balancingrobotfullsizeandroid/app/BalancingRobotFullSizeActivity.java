@@ -1,4 +1,4 @@
-/*************************************************************************************
+/* ************************************************************************************
  * Copyright (C) 2014 Kristian Sloth Lauszus. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
@@ -19,29 +19,23 @@
 
 package com.lauszus.balancingrobotfullsizeandroid.app;
 
-import android.annotation.TargetApi;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothManager;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
+import android.annotation.*;
+import android.bluetooth.*;
+import android.content.*;
+import android.os.*;
+import android.util.*;
+import android.view.*;
+import android.view.inputmethod.*;
+import android.widget.*;
 
-import java.lang.ref.WeakReference;
+import androidx.appcompat.app.*;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.*;
+import androidx.viewpager.widget.*;
+
+import com.google.android.material.tabs.*;
+
+import java.lang.ref.*;
 
 public class BalancingRobotFullSizeActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
     private static final String TAG = "BalancingRobotFullSize";
@@ -178,10 +172,8 @@ public class BalancingRobotFullSizeActivity extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
         if (mChatService != null) {
-            new Handler().postDelayed(new Runnable() {
-                public void run() {
-                    mChatService.stop(); // Stop the Bluetooth chat services if the user exits the app
-                }
+            new Handler().postDelayed(() -> {
+                mChatService.stop(); // Stop the Bluetooth chat services if the user exits the app
             }, 1000); // Wait 1 second before closing the connection, this is needed as onPause() will send stop messages before closing
         }
         finish(); // Exits the app
@@ -305,6 +297,7 @@ public class BalancingRobotFullSizeActivity extends AppCompatActivity implements
         return (currentTabSelected == tab);
     }
 
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (D)
             Log.d(TAG, "onActivityResult " + resultCode);
@@ -381,36 +374,30 @@ public class BalancingRobotFullSizeActivity extends AppCompatActivity implements
                             if (mBalancingRobotFullSizeActivity.mChatService == null)
                                 return;
                             Handler mHandler = new Handler();
-                            mHandler.postDelayed(new Runnable() {
-                                public void run() {
-                                    BalancingRobotFullSizeActivity mBalancingRobotFullSizeActivity = mActivity.get();
-                                    if (mBalancingRobotFullSizeActivity != null) {
-                                        mBalancingRobotFullSizeActivity.mChatService.mBluetoothProtocol.getPID();
-                                        mBalancingRobotFullSizeActivity.mChatService.mBluetoothProtocol.getTarget();
-                                        mBalancingRobotFullSizeActivity.mChatService.mBluetoothProtocol.getTurning();
-                                        mBalancingRobotFullSizeActivity.mChatService.mBluetoothProtocol.getKalman();
-                                    }
+                            mHandler.postDelayed(() -> {
+                                BalancingRobotFullSizeActivity mBalancingRobotFullSizeActivity13 = mActivity.get();
+                                if (mBalancingRobotFullSizeActivity13 != null) {
+                                    mBalancingRobotFullSizeActivity13.mChatService.mBluetoothProtocol.getPID();
+                                    mBalancingRobotFullSizeActivity13.mChatService.mBluetoothProtocol.getTarget();
+                                    mBalancingRobotFullSizeActivity13.mChatService.mBluetoothProtocol.getTurning();
+                                    mBalancingRobotFullSizeActivity13.mChatService.mBluetoothProtocol.getKalman();
                                 }
                             }, 1000); // Wait 1 second before sending the message
 
                             if (mBalancingRobotFullSizeActivity.checkTab(ViewPagerAdapter.INFO_FRAGMENT)) {
-                                mHandler.postDelayed(new Runnable() {
-                                    public void run() {
-                                        BalancingRobotFullSizeActivity mBalancingRobotFullSizeActivity = mActivity.get();
-                                        if (mBalancingRobotFullSizeActivity != null)
-                                            mBalancingRobotFullSizeActivity.mChatService.mBluetoothProtocol.startInfo(); // Request info
-                                    }
+                                mHandler.postDelayed(() -> {
+                                    BalancingRobotFullSizeActivity mBalancingRobotFullSizeActivity12 = mActivity.get();
+                                    if (mBalancingRobotFullSizeActivity12 != null)
+                                        mBalancingRobotFullSizeActivity12.mChatService.mBluetoothProtocol.startInfo(); // Request info
                                 }, 2000); // Wait 2 seconds before sending the message
                             } else if (mBalancingRobotFullSizeActivity.checkTab(ViewPagerAdapter.GRAPH_FRAGMENT)) {
-                                mHandler.postDelayed(new Runnable() {
-                                    public void run() {
-                                        BalancingRobotFullSizeActivity mBalancingRobotFullSizeActivity = mActivity.get();
-                                        if (mBalancingRobotFullSizeActivity != null) {
-                                            if (GraphFragment.mToggleButton.isChecked())
-                                                mBalancingRobotFullSizeActivity.mChatService.mBluetoothProtocol.startImu(); // Request data
-                                            else
-                                                mBalancingRobotFullSizeActivity.mChatService.mBluetoothProtocol.stopImu(); // Stop sending data
-                                        }
+                                mHandler.postDelayed(() -> {
+                                    BalancingRobotFullSizeActivity mBalancingRobotFullSizeActivity1 = mActivity.get();
+                                    if (mBalancingRobotFullSizeActivity1 != null) {
+                                        if (GraphFragment.mToggleButton.isChecked())
+                                            mBalancingRobotFullSizeActivity1.mChatService.mBluetoothProtocol.startImu(); // Request data
+                                        else
+                                            mBalancingRobotFullSizeActivity1.mChatService.mBluetoothProtocol.stopImu(); // Stop sending data
                                     }
                                 }, 2000); // Wait 2 seconds before sending the message
                             }

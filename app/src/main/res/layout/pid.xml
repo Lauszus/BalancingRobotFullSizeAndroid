@@ -215,7 +215,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/arrow_text_margin"
-                    android:layout_weight="0" />
+                    android:layout_weight="0"
                     android:text="@string/Ki" />
 
                 <TextView

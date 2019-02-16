@@ -16,29 +16,18 @@
 
 package com.lauszus.balancingrobotfullsizeandroid.app;
 
-import android.annotation.TargetApi;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Build;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.bluetooth.*;
+import android.content.*;
+import android.os.*;
+import android.util.*;
+import android.view.*;
+import android.widget.*;
+import android.widget.AdapterView.*;
 
-import java.util.Set;
+import androidx.appcompat.app.*;
+import androidx.appcompat.widget.Toolbar;
+
+import java.util.*;
 
 /**
  * This Activity appears as a dialog. It lists any paired devices and devices
@@ -62,7 +51,6 @@ public class DeviceListActivity extends AppCompatActivity {
     private ProgressBar mProgressBar;
 
     @Override
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.device_list);
@@ -79,14 +67,12 @@ public class DeviceListActivity extends AppCompatActivity {
 
         // Initialize the button to perform device discovery
         Button scanButton = (Button) findViewById(R.id.button_scan);
-        scanButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (!BalancingRobotFullSizeActivity.isEmulator())
-                    doDiscovery();
-                else
-                    mProgressBar.setVisibility(View.VISIBLE); // Just show the progress bar in the emulator
-                v.setVisibility(View.GONE);
-            }
+        scanButton.setOnClickListener(v -> {
+            if (!BalancingRobotFullSizeActivity.isEmulator())
+                doDiscovery();
+            else
+                mProgressBar.setVisibility(View.VISIBLE); // Just show the progress bar in the emulator
+            v.setVisibility(View.GONE);
         });
 
         // Initialize array adapters. One for already paired devices and
@@ -113,10 +99,7 @@ public class DeviceListActivity extends AppCompatActivity {
         this.registerReceiver(mReceiver, filter);
 
         // Get the local Bluetooth adapter
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
-            mBtAdapter = ((BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
-        else
-            mBtAdapter = BluetoothAdapter.getDefaultAdapter();
+        mBtAdapter = ((BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
 
         // Get a set of currently paired devices
         Set<BluetoothDevice> pairedDevices = null;
