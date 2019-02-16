@@ -20,19 +20,14 @@
 package com.lauszus.balancingrobotfullsizeandroid.app;
 
 
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.SeekBar;
-import android.widget.TextView;
+import android.os.*;
+import android.util.*;
+import android.view.*;
+import android.widget.*;
 
-import java.util.Locale;
+import androidx.fragment.app.*;
+
+import java.util.*;
 
 public class PIDFragment extends Fragment {
     private static final String TAG = "PIDFragment";
@@ -131,79 +126,63 @@ public class PIDFragment extends Fragment {
         mTurningSeekBar.setProgress(mTurningSeekBar.getMax() / 2); // Call this after the OnSeekBarChangeListener is created
 
         mButton = (Button) v.findViewById(R.id.button);
-        mButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BalancingRobotFullSizeActivity activity = (BalancingRobotFullSizeActivity) getActivity();
-                if (activity == null || activity.mChatService == null) {
-                    if (D)
-                        Log.e(TAG, "mChatService == null");
-                    return;
+        mButton.setOnClickListener(v111 -> {
+            BalancingRobotFullSizeActivity activity = (BalancingRobotFullSizeActivity) getActivity();
+            if (activity == null || activity.mChatService == null) {
+                if (D)
+                    Log.e(TAG, "mChatService == null");
+                return;
+            }
+            if (activity.mChatService.getState() == BluetoothChatService.STATE_CONNECTED) {
+                if (mKpSeekBarValue.getText() != null && mKiSeekBarValue.getText() != null && mKdSeekBarValue.getText() != null && (!mKpSeekBarValue.getText().equals(oldKpValue) || !mKiSeekBarValue.getText().equals(oldKiValue) || !mKdSeekBarValue.getText().equals(oldKdValue))) {
+                    oldKpValue = mKpSeekBarValue.getText();
+                    oldKiValue = mKiSeekBarValue.getText();
+                    oldKdValue = mKdSeekBarValue.getText();
+                    mHandler.post(() -> {
+                        BalancingRobotFullSizeActivity activity16 = (BalancingRobotFullSizeActivity) getActivity();
+                        if (activity16 != null)
+                            activity16.mChatService.mBluetoothProtocol.setPID((int) (Float.parseFloat(mKpSeekBarValue.getText().toString()) * 100.0f), (int) (Float.parseFloat(mKiSeekBarValue.getText().toString()) * 100.0f), (int) (Float.parseFloat(mKdSeekBarValue.getText().toString()) * 100.0f));
+                    }); // Wait before sending the message
+                    counter += 25;
+                    mHandler.postDelayed(() -> {
+                        BalancingRobotFullSizeActivity activity15 = (BalancingRobotFullSizeActivity) getActivity();
+                        if (activity15 != null) activity15.mChatService.mBluetoothProtocol.getPID();
+                    }, counter); // Wait before sending the message
+                    counter += 25;
                 }
-                if (activity.mChatService.getState() == BluetoothChatService.STATE_CONNECTED) {
-                    if (mKpSeekBarValue.getText() != null && mKiSeekBarValue.getText() != null && mKdSeekBarValue.getText() != null && (!mKpSeekBarValue.getText().equals(oldKpValue) || !mKiSeekBarValue.getText().equals(oldKiValue) || !mKdSeekBarValue.getText().equals(oldKdValue))) {
-                        oldKpValue = mKpSeekBarValue.getText();
-                        oldKiValue = mKiSeekBarValue.getText();
-                        oldKdValue = mKdSeekBarValue.getText();
-                        mHandler.post(new Runnable() {
-                            public void run() {
-                                BalancingRobotFullSizeActivity activity = (BalancingRobotFullSizeActivity) getActivity();
-                                if (activity != null)
-                                    activity.mChatService.mBluetoothProtocol.setPID((int) (Float.parseFloat(mKpSeekBarValue.getText().toString()) * 100.0f), (int) (Float.parseFloat(mKiSeekBarValue.getText().toString()) * 100.0f), (int) (Float.parseFloat(mKdSeekBarValue.getText().toString()) * 100.0f));
-                            }
-                        }); // Wait before sending the message
-                        counter += 25;
-                        mHandler.postDelayed(new Runnable() {
-                            public void run() {
-                                BalancingRobotFullSizeActivity activity = (BalancingRobotFullSizeActivity) getActivity();
-                                if (activity != null)
-                                    activity.mChatService.mBluetoothProtocol.getPID();
-                            }
-                        }, counter); // Wait before sending the message
-                        counter += 25;
-                    }
 
-                    if (mTargetAngleSeekBarValue.getText() != null && !mTargetAngleSeekBarValue.getText().equals(oldTargetAngleValue)) {
-                        oldTargetAngleValue = mTargetAngleSeekBarValue.getText();
-                        mHandler.postDelayed(new Runnable() {
-                            public void run() {
-                                BalancingRobotFullSizeActivity activity = (BalancingRobotFullSizeActivity) getActivity();
-                                if (activity != null)
-                                    activity.mChatService.mBluetoothProtocol.setTarget((int) (Float.parseFloat(mTargetAngleSeekBarValue.getText().toString()) * 100.0f) ); // The SeekBar can't handle negative numbers, do this to convert it
-                            }
-                        }, counter); // Wait before sending the message
-                        counter += 25;
-                        mHandler.postDelayed(new Runnable() {
-                            public void run() {
-                                BalancingRobotFullSizeActivity activity = (BalancingRobotFullSizeActivity) getActivity();
-                                if (activity != null)
-                                    activity.mChatService.mBluetoothProtocol.getTarget();
-                            }
-                        }, counter); // Wait before sending the message
-                        counter += 25;
-                    }
-
-                    if (mTurningSeekBarValue.getText() != null && !mTurningSeekBarValue.getText().equals(oldTurningValue)) {
-                        oldTurningValue = mTurningSeekBarValue.getText();
-                        mHandler.postDelayed(new Runnable() {
-                            public void run() {
-                                BalancingRobotFullSizeActivity activity = (BalancingRobotFullSizeActivity) getActivity();
-                                if (activity != null)
-                                    activity.mChatService.mBluetoothProtocol.setTurning(Byte.parseByte(mTurningSeekBarValue.getText().toString()));
-                            }
-                        }, counter); // Wait before sending the message
-                        counter += 25;
-                        mHandler.postDelayed(new Runnable() {
-                            public void run() {
-                                BalancingRobotFullSizeActivity activity = (BalancingRobotFullSizeActivity) getActivity();
-                                if (activity != null)
-                                    activity.mChatService.mBluetoothProtocol.getTurning();
-                            }
-                        }, counter); // Wait before sending the message
-                        counter += 25;
-                    }
-                    counter = 0; // Reset counter
+                if (mTargetAngleSeekBarValue.getText() != null && !mTargetAngleSeekBarValue.getText().equals(oldTargetAngleValue)) {
+                    oldTargetAngleValue = mTargetAngleSeekBarValue.getText();
+                    mHandler.postDelayed(() -> {
+                        BalancingRobotFullSizeActivity activity14 = (BalancingRobotFullSizeActivity) getActivity();
+                        if (activity14 != null)
+                            activity14.mChatService.mBluetoothProtocol.setTarget((int) (Float.parseFloat(mTargetAngleSeekBarValue.getText().toString()) * 100.0f)); // The SeekBar can't handle negative numbers, do this to convert it
+                    }, counter); // Wait before sending the message
+                    counter += 25;
+                    mHandler.postDelayed(() -> {
+                        BalancingRobotFullSizeActivity activity13 = (BalancingRobotFullSizeActivity) getActivity();
+                        if (activity13 != null)
+                            activity13.mChatService.mBluetoothProtocol.getTarget();
+                    }, counter); // Wait before sending the message
+                    counter += 25;
                 }
+
+                if (mTurningSeekBarValue.getText() != null && !mTurningSeekBarValue.getText().equals(oldTurningValue)) {
+                    oldTurningValue = mTurningSeekBarValue.getText();
+                    mHandler.postDelayed(() -> {
+                        BalancingRobotFullSizeActivity activity12 = (BalancingRobotFullSizeActivity) getActivity();
+                        if (activity12 != null)
+                            activity12.mChatService.mBluetoothProtocol.setTurning(Byte.parseByte(mTurningSeekBarValue.getText().toString()));
+                    }, counter); // Wait before sending the message
+                    counter += 25;
+                    mHandler.postDelayed(() -> {
+                        BalancingRobotFullSizeActivity activity1 = (BalancingRobotFullSizeActivity) getActivity();
+                        if (activity1 != null)
+                            activity1.mChatService.mBluetoothProtocol.getTurning();
+                    }, counter); // Wait before sending the message
+                    counter += 25;
+                }
+                counter = 0; // Reset counter
             }
         });
 
@@ -223,69 +202,39 @@ public class PIDFragment extends Fragment {
         Button mTurningUpArrow = (Button) v.findViewById(R.id.TurningUpArrow);
         Button mTurningDownArrow = (Button) v.findViewById(R.id.TurningDownArrow);
 
-        mKpUpArrow.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mKpSeekBar.setProgress(round10(mKpSeekBar.getProgress() + 10)); // Increase with 0.1 and round to nearest multiple of 10
-            }
+        mKpUpArrow.setOnClickListener(v110 -> {
+            mKpSeekBar.setProgress(round10(mKpSeekBar.getProgress() + 10)); // Increase with 0.1 and round to nearest multiple of 10
         });
-        mKpDownArrow.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mKpSeekBar.setProgress(round10(mKpSeekBar.getProgress() - 10)); // Decrease with 0.1 and round to nearest multiple of 10
-            }
+        mKpDownArrow.setOnClickListener(v19 -> {
+            mKpSeekBar.setProgress(round10(mKpSeekBar.getProgress() - 10)); // Decrease with 0.1 and round to nearest multiple of 10
         });
 
-        mKiUpArrow.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mKiSeekBar.setProgress(round10(mKiSeekBar.getProgress() + 10)); // Increase with 0.1 and round to nearest multiple of 10
-            }
+        mKiUpArrow.setOnClickListener(v18 -> {
+            mKiSeekBar.setProgress(round10(mKiSeekBar.getProgress() + 10)); // Increase with 0.1 and round to nearest multiple of 10
         });
-        mKiDownArrow.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mKiSeekBar.setProgress(round10(mKiSeekBar.getProgress() - 10)); // Decrease with 0.1 and round to nearest multiple of 10
-            }
+        mKiDownArrow.setOnClickListener(v17 -> {
+            mKiSeekBar.setProgress(round10(mKiSeekBar.getProgress() - 10)); // Decrease with 0.1 and round to nearest multiple of 10
         });
 
-        mKdUpArrow.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mKdSeekBar.setProgress(round10(mKdSeekBar.getProgress() + 10)); // Increase with 0.1 and round to nearest multiple of 10
-            }
+        mKdUpArrow.setOnClickListener(v16 -> {
+            mKdSeekBar.setProgress(round10(mKdSeekBar.getProgress() + 10)); // Increase with 0.1 and round to nearest multiple of 10
         });
-        mKdDownArrow.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mKdSeekBar.setProgress(round10(mKdSeekBar.getProgress() - 10)); // Decrease with 0.1 and round to nearest multiple of 10
-            }
+        mKdDownArrow.setOnClickListener(v15 -> {
+            mKdSeekBar.setProgress(round10(mKdSeekBar.getProgress() - 10)); // Decrease with 0.1 and round to nearest multiple of 10
         });
 
-        mTargetAngleUpArrow.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mTargetAngleSeekBar.setProgress(round10(mTargetAngleSeekBar.getProgress() + 10)); // Increase with 0.1 and round to nearest multiple of 10
-            }
+        mTargetAngleUpArrow.setOnClickListener(v14 -> {
+            mTargetAngleSeekBar.setProgress(round10(mTargetAngleSeekBar.getProgress() + 10)); // Increase with 0.1 and round to nearest multiple of 10
         });
-        mTargetAngleDownArrow.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mTargetAngleSeekBar.setProgress(round10(mTargetAngleSeekBar.getProgress() - 10)); // Decrease with 0.1 and round to nearest multiple of 10
-            }
+        mTargetAngleDownArrow.setOnClickListener(v13 -> {
+            mTargetAngleSeekBar.setProgress(round10(mTargetAngleSeekBar.getProgress() - 10)); // Decrease with 0.1 and round to nearest multiple of 10
         });
 
-        mTurningUpArrow.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mTurningSeekBar.setProgress(mTurningSeekBar.getProgress() + 1); // Increase with 1
-            }
+        mTurningUpArrow.setOnClickListener(v12 -> {
+            mTurningSeekBar.setProgress(mTurningSeekBar.getProgress() + 1); // Increase with 1
         });
-        mTurningDownArrow.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mTurningSeekBar.setProgress(mTurningSeekBar.getProgress() - 1); // Decrease with 1
-            }
+        mTurningDownArrow.setOnClickListener(v1 -> {
+            mTurningSeekBar.setProgress(mTurningSeekBar.getProgress() - 1); // Decrease with 1
         });
 
         updateButton();

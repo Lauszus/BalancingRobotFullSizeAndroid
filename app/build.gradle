@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.3'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
         applicationId 'com.lauszus.balancingrobotfullsizeandroid.app'
-        minSdkVersion 14
-        targetSdkVersion 25
+        minSdkVersion 19
+        targetSdkVersion 28
         versionCode 2
         versionName '1.0.1'
     }
@@ -27,6 +27,10 @@ android {
     lintOptions {
         abortOnError false
     }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
 }
 
 repositories {
@@ -36,11 +40,14 @@ repositories {
 }
 
 dependencies {
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.google.android.gms:play-services-maps:11.0.4'
-    compile 'com.jjoe64:graphview:3.1.4'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.google.android.gms:play-services-maps:16.1.0'
+    // TODO Upgrade to 4.
+    implementation 'com.jjoe64:graphview:3.1.4'
     // TODO: Use Maven repo instead
-    compile(name: 'SpeedometerView-1.0.1', ext: 'aar')
+    implementation 'com.cardiomood.android:android-widgets:0.1.1'
+    //implementation 'com.cardiomood.android.speedometer:speedometer:1.0.1'
+    //implementation (name: 'SpeedometerView-1.0.1', ext: 'aar')
 }
 
 // These values are all set in my global gradle.properties file

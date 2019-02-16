@@ -60,7 +60,7 @@ public class BluetoothProtocol {
     }
 
 
-    private void sendCommand(byte output[]) {
+    private void sendCommand(byte[] output) {
         mChatService.write(commandHeader);
         mChatService.write(output);
         mChatService.write(getChecksum(output));
@@ -76,25 +76,17 @@ public class BluetoothProtocol {
         if (D)
             Log.i(TAG, "setPID " + Kp + " " + Ki + " " + Kd);
 
-        byte output[] = {
-                SET_PID, // Cmd
-                6, // Length
-                (byte)(Kp & 0xFF),
-                (byte)(Kp >> 8),
-                (byte)(Ki & 0xFF),
-                (byte)(Ki >> 8),
-                (byte)(Kd & 0xFF),
-                (byte)(Kd >> 8),
-        };
+	    byte[] output = {SET_PID, // Cmd
+	                     6, // Length
+	                     (byte) (Kp & 0xFF), (byte) (Kp >> 8), (byte) (Ki & 0xFF), (byte) (Ki >> 8), (byte) (Kd & 0xFF), (byte) (Kd >> 8),};
         sendCommand(output); // Set PID values
     }
 
     /** Use this to request PID values. */
     public void getPID() {
-        byte output[] = {
-                GET_PID, // Cmd
-                0, // Length
-        };
+	    byte[] output = {GET_PID, // Cmd
+	                     0, // Length
+	    };
         sendCommand(output); // Send output
     }
 
@@ -106,37 +98,30 @@ public class BluetoothProtocol {
         if (D)
             Log.i(TAG, "setTarget: " + targetAngle);
 
-        byte output[] = {
-                SET_TARGET, // Cmd
-                2, // Length
-                (byte)(targetAngle & 0xFF),
-                (byte)(targetAngle >> 8),
-        };
+	    byte[] output = {SET_TARGET, // Cmd
+	                     2, // Length
+	                     (byte) (targetAngle & 0xFF), (byte) (targetAngle >> 8),};
         sendCommand(output); // Set PID values
     }
 
     public void getTarget() {
-        byte output[] = {
-                GET_TARGET, // Cmd
-                0, // Length
-        };
+	    byte[] output = {GET_TARGET, // Cmd
+	                     0, // Length
+	    };
         sendCommand(output); // Send output
     }
 
     public void setTurning(byte turningValue) {
-        byte output[] = {
-                SET_TURNING, // Cmd
-                1, // Length
-                turningValue,
-        };
+	    byte[] output = {SET_TURNING, // Cmd
+	                     1, // Length
+	                     turningValue,};
         sendCommand(output); // Set PID values
     }
 
     public void getTurning() {
-        byte output[] = {
-                GET_TURNING, // Cmd
-                0, // Length
-        };
+	    byte[] output = {GET_TURNING, // Cmd
+	                     0, // Length
+	    };
         sendCommand(output); // Send output
     }
 
@@ -149,56 +134,44 @@ public class BluetoothProtocol {
      */
 
     public void setKalman(int Qangle, int Qbias, int Rmeasure) {
-        byte output[] = {
-                SET_KALMAN, // Cmd
-                6, // Length
-                (byte)(Qangle & 0xFF),
-                (byte)(Qangle >> 8),
-                (byte)(Qbias & 0xFF),
-                (byte)(Qbias >> 8),
-                (byte)(Rmeasure & 0xFF),
-                (byte)(Rmeasure >> 8),
-        };
+	    byte[] output = {SET_KALMAN, // Cmd
+	                     6, // Length
+	                     (byte) (Qangle & 0xFF), (byte) (Qangle >> 8), (byte) (Qbias & 0xFF), (byte) (Qbias >> 8), (byte) (Rmeasure & 0xFF), (byte) (Rmeasure >> 8),};
         sendCommand(output); // Set PID values
     }
 
     public void getKalman() {
-        byte output[] = {
-                GET_KALMAN, // Cmd
-                0, // Length
-        };
+	    byte[] output = {GET_KALMAN, // Cmd
+	                     0, // Length
+	    };
         sendCommand(output); // Send output
     }
 
     public void startInfo() {
-        byte output[] = {
-                START_INFO, // Cmd
-                0, // Length
-        };
+	    byte[] output = {START_INFO, // Cmd
+	                     0, // Length
+	    };
         sendCommand(output); // Send output
     }
 
     public void stopInfo() {
-        byte output[] = {
-                STOP_INFO, // Cmd
-                0, // Length
-        };
+	    byte[] output = {STOP_INFO, // Cmd
+	                     0, // Length
+	    };
         sendCommand(output); // Send output
     }
 
     public void startImu() {
-        byte output[] = {
-                START_IMU, // Cmd
-                0, // Length
-        };
+	    byte[] output = {START_IMU, // Cmd
+	                     0, // Length
+	    };
         sendCommand(output); // Send output
     }
 
     public void stopImu() {
-        byte output[] = {
-                STOP_IMU, // Cmd
-                0, // Length
-        };
+	    byte[] output = {STOP_IMU, // Cmd
+	                     0, // Length
+	    };
         sendCommand(output); // Send output
     }
 /*
@@ -213,7 +186,7 @@ public class BluetoothProtocol {
 */
     private byte[] buffer = new byte[1024];
 
-    public void parseData(byte msg[], int offset, int length) {
+    public void parseData(byte[] msg, int offset, int length) {
         System.arraycopy(msg, offset, buffer, 0, length);
 
         String readMessage = new String(buffer, 0, length);
@@ -244,7 +217,7 @@ public class BluetoothProtocol {
                 return;
             }
 
-            int input[] = new int[msgLength];
+	        int[] input = new int[msgLength];
             int i;
             for (i = 0; i < msgLength; i++)
                 input[i] = data[i + responseHeader.length() + 2];
@@ -358,14 +331,14 @@ public class BluetoothProtocol {
     }
 
     // TODO: Combine these two
-    private byte getChecksum(byte data[]) {
+    private byte getChecksum(byte[] data) {
         byte checksum = 0;
         for (byte val : data)
             checksum ^= val;
         return checksum;
     }
 
-    private int getChecksum(int data[]) {
+    private int getChecksum(int[] data) {
         int checksum = 0;
         for (int val : data)
             checksum ^= val;

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.lauszus.balancingrobotfullsizeandroid.app" >
 
     <!-- Used for Bluetooth communication -->
@@ -26,7 +27,8 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
 
         <!-- Meta-data used by Google Maps - note that the API key is stored locally and not published on Github. Please read: https://developers.google.com/maps/documentation/android/ -->
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
@@ -36,7 +38,7 @@
             android:name=".BalancingRobotFullSizeActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

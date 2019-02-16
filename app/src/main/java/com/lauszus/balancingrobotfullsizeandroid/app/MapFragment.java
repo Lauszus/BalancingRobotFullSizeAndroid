@@ -19,24 +19,18 @@
 
 package com.lauszus.balancingrobotfullsizeandroid.app;
 
-import android.Manifest;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationManager;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.widget.Toast;
+import android.*;
+import android.content.*;
+import android.content.pm.*;
+import android.location.*;
+import android.widget.*;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
+import androidx.annotation.*;
+import androidx.appcompat.app.*;
+import androidx.core.app.*;
+
+import com.google.android.gms.maps.*;
+import com.google.android.gms.maps.model.*;
 
 public class MapFragment extends SupportMapFragment implements OnMapReadyCallback {
     private GoogleMap mMap;
@@ -52,22 +46,14 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
             new AlertDialog.Builder(getActivity())
                     .setMessage("Your GPS seems to be disabled, do you want to enable it?")
                     .setCancelable(false)
-                    .setPositiveButton("Yes",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(final DialogInterface dialog, final int id) {
-                                    startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                                }
-                            })
-                    .setNegativeButton("No",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(final DialogInterface dialog, final int id) {
-                                    dialog.cancel();
-                                    if (!BalancingRobotFullSizeActivity.isEmulator()) {
-                                        Toast.makeText(getActivity(), "GPS must be on in order to use this application!", Toast.LENGTH_LONG).show();
-                                        getActivity().finish();
-                                    }
-                                }
-                            })
+                    .setPositiveButton("Yes", (dialog, id) -> startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)))
+                    .setNegativeButton("No", (dialog, id) -> {
+                        dialog.cancel();
+                        if (!BalancingRobotFullSizeActivity.isEmulator()) {
+                            Toast.makeText(getActivity(), "GPS must be on in order to use this application!", Toast.LENGTH_LONG).show();
+                            getActivity().finish();
+                        }
+                    })
                     .create().show();
         } else
             setUpMapIfNeeded();
@@ -109,7 +95,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case GPS_PERMISSIONS_REQUEST: {
                 // If request is cancelled, the result arrays are empty.

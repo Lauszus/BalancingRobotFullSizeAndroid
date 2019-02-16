@@ -19,26 +19,17 @@
 
 package com.lauszus.balancingrobotfullsizeandroid.app;
 
-import android.graphics.Color;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ToggleButton;
+import android.graphics.*;
+import android.os.*;
+import android.util.*;
+import android.view.*;
+import android.widget.*;
 
-import com.jjoe64.graphview.GraphView.GraphViewData;
-import com.jjoe64.graphview.GraphView.LegendAlign;
-import com.jjoe64.graphview.GraphViewSeries;
-import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
-import com.jjoe64.graphview.GraphViewStyle;
-import com.jjoe64.graphview.LineGraphView;
+import androidx.fragment.app.*;
+
+import com.jjoe64.graphview.GraphView.*;
+import com.jjoe64.graphview.*;
+import com.jjoe64.graphview.GraphViewSeries.*;
 
 // TODO: Remove static
 public class GraphFragment extends Fragment {
@@ -122,53 +113,41 @@ public class GraphFragment extends Fragment {
         layout.addView(graphView);
 
         mCheckBox1 = (CheckBox) v.findViewById(R.id.checkBox1);
-        mCheckBox1.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (((CheckBox) v).isChecked())
-                    graphView.addSeries(accSeries);
-                else
-                    graphView.removeSeries(accSeries);
-            }
+        mCheckBox1.setOnClickListener(v15 -> {
+            if (((CheckBox) v15).isChecked())
+                graphView.addSeries(accSeries);
+            else
+                graphView.removeSeries(accSeries);
         });
         mCheckBox2 = (CheckBox) v.findViewById(R.id.checkBox2);
-        mCheckBox2.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (((CheckBox) v).isChecked())
-                    graphView.addSeries(gyroSeries);
-                else
-                    graphView.removeSeries(gyroSeries);
-            }
+        mCheckBox2.setOnClickListener(v14 -> {
+            if (((CheckBox) v14).isChecked())
+                graphView.addSeries(gyroSeries);
+            else
+                graphView.removeSeries(gyroSeries);
         });
         mCheckBox3 = (CheckBox) v.findViewById(R.id.checkBox3);
-        mCheckBox3.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (((CheckBox) v).isChecked())
-                    graphView.addSeries(kalmanSeries);
-                else
-                    graphView.removeSeries(kalmanSeries);
-            }
+        mCheckBox3.setOnClickListener(v13 -> {
+            if (((CheckBox) v13).isChecked())
+                graphView.addSeries(kalmanSeries);
+            else
+                graphView.removeSeries(kalmanSeries);
         });
 
         mToggleButton = (ToggleButton) v.findViewById(R.id.toggleButton);
-        mToggleButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (((ToggleButton) v).isChecked())
-                    mToggleButton.setText("Stop");
-                else
-                    mToggleButton.setText("Start");
+        mToggleButton.setOnClickListener(v12 -> {
+            if (((ToggleButton) v12).isChecked())
+                mToggleButton.setText("Stop");
+            else
+                mToggleButton.setText("Start");
 
-                BalancingRobotFullSizeActivity activity = ((BalancingRobotFullSizeActivity) getActivity());
-                if (activity != null && activity.mChatService != null) {
-                    if (activity.mChatService.getState() == BluetoothChatService.STATE_CONNECTED && activity.checkTab(ViewPagerAdapter.GRAPH_FRAGMENT)) {
-                        if (((ToggleButton) v).isChecked())
-                            activity.mChatService.mBluetoothProtocol.startImu(); // Request data
-                        else
-                            activity.mChatService.mBluetoothProtocol.stopImu(); // Stop sending data
-                    }
+            BalancingRobotFullSizeActivity activity = ((BalancingRobotFullSizeActivity) getActivity());
+            if (activity != null && activity.mChatService != null) {
+                if (activity.mChatService.getState() == BluetoothChatService.STATE_CONNECTED && activity.checkTab(ViewPagerAdapter.GRAPH_FRAGMENT)) {
+                    if (((ToggleButton) v12).isChecked())
+                        activity.mChatService.mBluetoothProtocol.startImu(); // Request data
+                    else
+                        activity.mChatService.mBluetoothProtocol.stopImu(); // Stop sending data
                 }
             }
         });
@@ -177,18 +156,15 @@ public class GraphFragment extends Fragment {
         mQbias = (EditText) v.findViewById(R.id.editText2);
         mRmeasure = (EditText) v.findViewById(R.id.editText3);
         Button mButton = (Button) v.findViewById(R.id.updateButton);
-        mButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BalancingRobotFullSizeActivity activity = ((BalancingRobotFullSizeActivity) getActivity());
-                if (activity == null || activity.mChatService == null) {
-                    if (D)
-                        Log.e(TAG, "mChatService == null");
-                    return;
-                }
-                if (!mQangle.getText().toString().isEmpty() && !mQbias.getText().toString().isEmpty() && !mRmeasure.getText().toString().isEmpty())
-                    activity.mChatService.mBluetoothProtocol.setKalman((int) (Float.parseFloat(mQangle.getText().toString()) * 10000.0f), (int) (Float.parseFloat(mQbias.getText().toString()) * 10000.0f), (int) (Float.parseFloat(mRmeasure.getText().toString()) * 10000.0f));
+        mButton.setOnClickListener(v1 -> {
+            BalancingRobotFullSizeActivity activity = ((BalancingRobotFullSizeActivity) getActivity());
+            if (activity == null || activity.mChatService == null) {
+                if (D)
+                    Log.e(TAG, "mChatService == null");
+                return;
             }
+            if (!mQangle.getText().toString().isEmpty() && !mQbias.getText().toString().isEmpty() && !mRmeasure.getText().toString().isEmpty())
+                activity.mChatService.mBluetoothProtocol.setKalman((int) (Float.parseFloat(mQangle.getText().toString()) * 10000.0f), (int) (Float.parseFloat(mQbias.getText().toString()) * 10000.0f), (int) (Float.parseFloat(mRmeasure.getText().toString()) * 10000.0f));
         });
 
         return v;

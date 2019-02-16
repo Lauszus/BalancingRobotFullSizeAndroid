@@ -19,20 +19,21 @@
 
 package com.lauszus.balancingrobotfullsizeandroid.app;
 
-import android.graphics.Color;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.graphics.*;
+import android.os.*;
+import android.view.*;
+import android.widget.*;
 
-import com.cardiomood.android.speedometer.SpeedometerView;
+import androidx.fragment.app.*;
 
-import java.util.Locale;
+import com.cardiomood.android.controls.gauge.*;
+
+import java.util.*;
+
+//import com.cardiomood.android.speedometer.SpeedometerView;
 
 public class InfoFragment extends Fragment {
-    private SpeedometerView mSpeed;
+    private SpeedometerGauge/*View*/ mSpeed;
 
     TextView mCurrentDraw, mTurning, mBatteryLevel, mRunTime;
 
@@ -44,19 +45,14 @@ public class InfoFragment extends Fragment {
             throw new RuntimeException();
 
         // Customize SpeedometerView
-        mSpeed = (SpeedometerView) v.findViewById(R.id.speedometer);
+        mSpeed = (SpeedometerGauge/*View*/) v.findViewById(R.id.speedometer);
         mCurrentDraw = (TextView) v.findViewById(R.id.current);
         mTurning = (TextView) v.findViewById(R.id.turning);
         mBatteryLevel = (TextView) v.findViewById(R.id.battery);
         mRunTime = (TextView) v.findViewById(R.id.runTime);
 
         // Add label converter
-        mSpeed.setLabelConverter(new SpeedometerView.LabelConverter() {
-            @Override
-            public String getLabelFor(double progress, double maxProgress) {
-                return String.valueOf((int) Math.round(progress));
-            }
-        });
+        mSpeed.setLabelConverter((progress, maxProgress) -> String.valueOf((int) Math.round(progress)));
 
         // Configure value range and ticks
         mSpeed.setMaxSpeed(100);
